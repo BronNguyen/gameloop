@@ -7,10 +7,13 @@
     "lodash": "^4.17.21"
   },
   "private": true,
-  "test": "echo \"Error: no test specified\" && exit 1",
-  "build": "webpack --mode production",
+  "build": "webpack",
   "dev": "webpack --mode development",
   "devDependencies": {
+    "@babel/core": "^7.14.0",
+    "@babel/preset-env": "^7.14.1",
+    "babel-loader": "^8.2.2",
+    "clean-webpack-plugin": "^4.0.0-alpha.0",
     "html-webpack-plugin": "^5.3.1",
     "ts-loader": "^9.1.2",
     "typescript": "^4.2.4",
@@ -18,7 +21,9 @@
     "webpack-cli": "^4.7.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --watch",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
