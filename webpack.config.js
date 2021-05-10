@@ -1,4 +1,6 @@
 const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   mode: "development", // could be "production" as well
@@ -41,4 +43,13 @@ module.exports = {
     compress: true,
     port: 9000,
   },
+  plugins: [
+    new CleanWebpackPlugin({
+      root: path.resolve(__dirname, "../")
+    }),
+    new HtmlWebpackPlugin({
+      title: "Game Loop Researching",
+      template: "./src/index.html"
+    })
+  ]
 };

@@ -1,4 +1,4 @@
-var element = document.getElementById("box");
+var element = document.getElementById("myCanvas");
 var left = 0;
 var rAF_ID;
 
