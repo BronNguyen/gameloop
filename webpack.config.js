@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = {
   mode: "development", // could be "production" as well
-  entry: './src/index.js',
+  entry: './src/index.ts',
   mode: 'development',
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -23,10 +23,18 @@ module.exports = {
         },
       },
       {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+      {
         test: /\.(png|svg|jpg|gif)$/,
         use: ['file-loader']
       }
     ],
+  },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
   },
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
