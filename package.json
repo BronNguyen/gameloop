@@ -1,0 +1,34 @@
+{
+  "name": "gameloop",
+  "version": "1.0.0",
+  "main": "index.js",
+  "description": "",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "private": true,
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "build": "webpack --mode production",
+  "dev": "webpack --mode development",
+  "devDependencies": {
+    "html-webpack-plugin": "^5.3.1",
+    "ts-loader": "^9.1.2",
+    "typescript": "^4.2.4",
+    "webpack": "^5.36.2",
+    "webpack-cli": "^4.7.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BronNguyen/gameloop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BronNguyen/gameloop/issues"
+  },
+  "homepage": "https://github.com/BronNguyen/gameloop#readme"
+}
