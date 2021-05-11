@@ -1,6 +1,7 @@
 import GameWorld from "./GameWorld";
+import dinoBody from "./Util/PhysicBody";
 
-export default class Component {
+export default class Dino {
   width;
   height;
   color;

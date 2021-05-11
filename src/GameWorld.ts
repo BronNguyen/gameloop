@@ -1,6 +1,7 @@
 class GameWorld {
   context: CanvasRenderingContext2D;
   canvas = <HTMLCanvasElement>document.getElementById("myCanvas");
+  gravity = 9.8;
 
   constructor() {
     this.canvas.width = 480;
