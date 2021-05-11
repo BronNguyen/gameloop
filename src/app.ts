@@ -1,7 +1,10 @@
 export default () => {
-    const element = document.createElement("h1");
+    const canvas = document.createElement("canvas");
+    canvas.width = 480;
+    canvas.height = 270;
+    const context = canvas.getContext("2d");
+
+    document.body.insertBefore(canvas, document.body.childNodes[0]);
   
-    element.innerHTML =  "Hello, bro!";
-  
-    return element;
+    return canvas;
   };
