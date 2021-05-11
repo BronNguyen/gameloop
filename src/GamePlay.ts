@@ -1,22 +1,29 @@
-import {input} from './DefineInput';
-import Update from './Util/Update';
-import Render from './Util/Render';
+// import GamePlay from "./GamePlay";
 
-let lastTime = window.performance.now();
+// import {input} from './DefineInput';
+import Update from "./Util/Update";
+import Render from "./Util/Render";
 
-export default requestAnimationFrame(loop)
+export default function GamePlay() {
+  let lastTime = window.performance.now();
 
-function loop() {
-  const time = window.performance.now();
-  const delta = time - lastTime;
+  requestAnimationFrame(loop);
 
+  function loop() {
+    const time = window.performance.now();
+    const delta = time - lastTime;
 
-  Update(time, delta);
+    // ProcessInput(input);
 
-  Render();
+    Update(time, delta);
 
-  lastTime = time;
+    Render();
 
-  requestAnimationFrame(loop)
+    lastTime = time;
+
+    requestAnimationFrame(loop);
+  }
+
+  // function ProcessInput(input) {
+  // }
 }
-

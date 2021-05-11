@@ -27,4 +27,4 @@ class Dino {
   }
 }
 
-export const dino = new Dino(30,30,"red",10,10);
+export const dino = new Dino(30,30,"red",0,0);

@@ -1,8 +1,10 @@
 import GameWorld from "../GameWorld";
+import SuperConsoleLog from "./SuperConsoleLog";
 import Vector2 from "./Vector2";
 
 export default class PhysicsBody {
     mass = 0;
+    motivationY = 0;
     velocity = new Vector2(0,0);
 
     constructor(mass) {
@@ -25,9 +27,13 @@ export default class PhysicsBody {
         return this.mass * GameWorld.gravity;
     }
 
+    setMotivationY(number) {
+        this.motivationY = number;
+    }
+
     ConsequentVelocity () {
         const velX = this.velocity.x;
-        const VelY = this.velocity.y + this.GravityForce();
+        const VelY = - this.velocity.y + this.GravityForce();
         return new Vector2(velX,VelY);
     }
 }
