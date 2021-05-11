@@ -1,5 +1,4 @@
 import PhysicsBody from "./Util/PhysicBody";
-import dinoImage from "./assets/dino-idle.png";
 
 class Dino {
 
@@ -8,17 +7,18 @@ class Dino {
   height = 0;
   x = 0;
   y = 0;
-  private image = dinoImage;
+  private image = new Image(30,30);
 
   constructor(w, h, x, y) {
     this.width = w;
     this.height = h;
     this.x = x;
     this.y = y;
+    this.image.src = "./assets/dino-idle.png"
   }
 
   reDraw(context: CanvasRenderingContext2D) {
-    context.drawImage(dinoImage,this.x, this.y, this.width, this.height);
+    context.drawImage(this.image,this.x, this.y, this.width, this.height);
   }
 
   public setPosition(x,y) {
