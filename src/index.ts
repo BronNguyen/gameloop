@@ -1,3 +1,4 @@
-import App from './app';
+import app from "./GameWorld";
+import Component from "./Component";
 
-document.body.appendChild(App());
+const myGamePiece = new Component(30, 30, "red", 10, 120).fill();
