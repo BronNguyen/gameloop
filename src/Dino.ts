@@ -2,7 +2,7 @@ import PhysicsBody from "./Util/PhysicBody";
 
 class Dino {
 
-  dinoBody = new PhysicsBody(1);
+  dinoBody = new PhysicsBody(6);
   width;
   height;
   color;
@@ -27,4 +27,4 @@ class Dino {
   }
 }
 
-export const dino = new Dino(30,30,"red",0,0);
+export const dino = new Dino(30,30,"red",0,550);

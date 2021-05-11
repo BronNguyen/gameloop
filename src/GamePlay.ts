@@ -1,8 +1,8 @@
 // import GamePlay from "./GamePlay";
 
 // import {input} from './DefineInput';
-import Update from "./Util/Update";
-import Render from "./Util/Render";
+import Update from "./Update";
+import Render from "./Render";
 
 export default function GamePlay() {
   let lastTime = window.performance.now();
