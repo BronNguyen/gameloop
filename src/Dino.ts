@@ -1,7 +1,8 @@
-import GameWorld from "./GameWorld";
-import dinoBody from "./Util/PhysicBody";
+import PhysicsBody from "./Util/PhysicBody";
 
-export default class Dino {
+class Dino {
+
+  dinoBody = new PhysicsBody(1);
   width;
   height;
   color;
@@ -15,9 +16,15 @@ export default class Dino {
     this.y = y;
   }
 
-  fill() {
-    const ctx = GameWorld.context;
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+  reDraw(context: CanvasRenderingContext2D) {
+    context.fillStyle = this.color;
+    context.fillRect(this.x, this.y, this.width, this.height);
+  }
+
+  public setPosition(x,y) {
+    this.x = x;
+    this.y = y;
   }
 }
+
+export const dino = new Dino(30,30,"red",10,10);

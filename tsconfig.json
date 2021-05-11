@@ -15,11 +15,8 @@
 		"sourceMap": true,
 		"baseUrl": "./src",
 		"paths": {
-		  "~/*": ["./*"]
+		  "~/*": ["../*"]
 		},
 	},
-	"include": [
-		"src/**/*"
-, "assets/*",
-"broone/*"	]
+	"include": ["src/**/*", "assets/*"],
 }

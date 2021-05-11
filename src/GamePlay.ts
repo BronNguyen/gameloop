@@ -1,4 +1,4 @@
-import ProcessInput from './ProcessInput';
+import {input} from './DefineInput';
 import Update from './Util/Update';
 import Render from './Util/Render';
 
@@ -10,7 +10,6 @@ function loop() {
   const time = window.performance.now();
   const delta = time - lastTime;
 
-  const processInput = new ProcessInput();
 
   Update(time, delta);
 

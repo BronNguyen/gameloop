@@ -1,6 +1,14 @@
-import Dino from "~/Dino";
-import GameWorld from "~/GameWorld";
+import {dino} from "../Dino";
+import GameWorld from "../GameWorld";
+import Update from "./Update";
+
+
+function Clear() {
+    GameWorld.context.clearRect(0,0,GameWorld.canvas.width,GameWorld.canvas.height);
+}
 
 export default function Render() {
-    const dino = new Dino(30, 30, "red", 10, 120).fill();
+    Clear();
+    const context = GameWorld.context;
+    dino.reDraw(context);
 }

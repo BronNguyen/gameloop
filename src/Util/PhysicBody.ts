@@ -1,15 +1,11 @@
-import GameWorld from "~/GameWorld";
+import GameWorld from "../GameWorld";
 import Vector2 from "./Vector2";
 
 export default class PhysicsBody {
-    width = 1;
-    height = 1;
-    mass = 1000;
+    mass = 0;
     velocity = new Vector2(0,0);
 
-    constructor(w,h,mass) {
-        this.width = w;
-        this.height = h;
+    constructor(mass) {
         this.mass = mass;
     }
 
@@ -31,7 +27,7 @@ export default class PhysicsBody {
 
     ConsequentVelocity () {
         const velX = this.velocity.x;
-        const VelY = this.velocity.y - this.GravityForce();
+        const VelY = this.velocity.y + this.GravityForce();
         return new Vector2(velX,VelY);
     }
 }

@@ -1,4 +1,4 @@
-export default class ProcessInput {
+class DefineInput {
   queue: string[] = [];
   constructor() {}
 
@@ -52,3 +52,4 @@ export default class ProcessInput {
     })
   };
 }
+export const input = new DefineInput();

@@ -1,11 +1,11 @@
 class GameWorld {
   context: CanvasRenderingContext2D;
   canvas = <HTMLCanvasElement>document.getElementById("myCanvas");
-  gravity = 9.8;
+  gravity = 1 ;
 
   constructor() {
-    this.canvas.width = 480;
-    this.canvas.height = 270;
+    this.canvas.width = 1000;
+    this.canvas.height = 340;
     this.context = <CanvasRenderingContext2D>this.canvas.getContext("2d");
   }
 }
