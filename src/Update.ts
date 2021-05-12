@@ -28,10 +28,10 @@ export default function Update(time, delta, state: State) {
     const newCameraPosition = () => {
       const camX =
         camOldPosX +
-        camera.cameraBody.ConsequentVelocity(state.gameWorld.gravity).x * delta;
+        camera.cameraBody.ConsequentVelocity(state.gameWorld.gravity).x * delta/1000;
       const camY =
         camOldPosY +
-        camera.cameraBody.ConsequentVelocity(state.gameWorld.gravity).y * delta;
+        camera.cameraBody.ConsequentVelocity(state.gameWorld.gravity).y * delta/1000;
 
       return new Vector2(camX, camY);
     };
@@ -39,10 +39,10 @@ export default function Update(time, delta, state: State) {
     const newDinoPosition = () => {
       const x =
         oldPosX +
-        dinoBody.ConsequentVelocity(state.gameWorld.gravity).x * delta;
+        dinoBody.ConsequentVelocity(state.gameWorld.gravity).x * delta/1000;
       let y =
         oldPosY +
-        dinoBody.ConsequentVelocity(state.gameWorld.gravity).y * delta;
+        dinoBody.ConsequentVelocity(state.gameWorld.gravity).y * delta/1000;
 
       if (y > state.gameWorld.worldHeight - dino.height) {
         y = state.gameWorld.worldHeight - dino.height;
@@ -63,10 +63,6 @@ export default function Update(time, delta, state: State) {
     if (inputKey) {
       state.input.RegisterKeyPress(<string>inputKey);
       if (inputKey == "ArrowUp") {
-        // if(Math.floor(time/500)%2==0){
-        //   console.log(dino.y,"dino.y")
-        //   console.log(state.gameWorld.canvas.height - dino.height,'state.gameWorld.canvas.height - dino.height')
-        // }
         DinoJump(state);
       }
       if (inputKey == "ArrowDown") {
@@ -104,10 +100,7 @@ export default function Update(time, delta, state: State) {
       );
       state.enemies.push(newEnemy);
     } else {
-      if (inputKey== " ") {
-        console.log(state.enemies);
-        console.log(dino.x,"dino x")
-      }
+      // TODO
       state.enemies.map((e) => {});
     }
   }
