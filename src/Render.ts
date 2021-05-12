@@ -6,7 +6,7 @@ export default function Render(state: State) {
   // CAMERA: at the RENDER FUNCTION, we have the camera always follow the dinosaur, so we will draw at the screen (draw into camera screen)
   // the sprites with relative position from the camera!
   const dinoRelativePosX =
-    state.camera.camPosX - state.dino.x - state.gameWorld.canvas.width / 3;
+    state.camera.camPosX - state.dino.x - state.gameWorld.canvas.width / 2.5;
   state.dino.reDraw(context, dinoRelativePosX, null);
 }
 
