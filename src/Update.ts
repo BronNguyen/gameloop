@@ -1,5 +1,6 @@
 import Vector2 from "./Util/Vector2";
 import State from "./State";
+import { DinoDown, DinoRun } from "./Animation/DinoAnimation";
 
 export default function Update(time, delta, state: State) {
   const dino = state.dino;
@@ -14,6 +15,8 @@ export default function Update(time, delta, state: State) {
   camera.cameraBody.velocity.x = velX;
 
   if (state.isGameRunning) {
+    dino.currentAnimation = DinoRun;
+    // animationUpdate(dino.currentAnimation);
     if (dino.dinoBody.motivationY > 0) {
       dino.dinoBody.motivationY -= 1;
     } else {
@@ -60,10 +63,35 @@ export default function Update(time, delta, state: State) {
         //   console.log(dino.y,"dino.y")
         //   console.log(state.gameWorld.canvas.height - dino.height,'state.gameWorld.canvas.height - dino.height')
         // }
-        if (dino.y < state.gameWorld.canvas.height - dino.height) return;
-        dino.dinoBody.setVelocityY(2);
-        dino.dinoBody.setMotivationY(12);
+        DinoJump(state);
+      }
+      if (inputKey == "ArrowDown") {
+        DinoDuck(state)
       }
     }
+  }
+}
+
+function DinoJump(state:State) {
+  if (state.dino.y < state.gameWorld.canvas.height - state.dino.height) return;
+  state.dino.dinoBody.setVelocityY(2);
+  state.dino.dinoBody.setMotivationY(12);
+}
+
+function DinoDuck(state:State) {
+  if(state.dino.currentAnimation == DinoDown) return;
+  state.dino.currentAnimation = DinoDown;
+  animationUpdate(state.dino.currentAnimation);
+  state.dino.y = state.dino.y + 30;
+  if (state.dino.y < state.gameWorld.canvas.height - state.dino.height) {
+    state.dino.dinoBody.setMotivationY(0);
+  }
+}
+
+function animationUpdate(currentAnimation) {
+  currentAnimation.count += 1;
+  if (currentAnimation.count == currentAnimation.frameRate){
+    currentAnimation.count = 0;
+    currentAnimation.currentIndex == currentAnimation.frameSet.length ? currentAnimation.currentIndex = 0: currentAnimation.currentIndex += 1
   }
 }

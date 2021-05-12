@@ -4,6 +4,7 @@ export default class MyAnimation {
     frameHeight: number;
     frameRate: number;
     frameSet: number[];
+    count = 0;
     currentIndex = 0;
 
     constructor(s, fw, fh, fr, fs) {

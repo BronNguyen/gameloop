@@ -2,7 +2,7 @@ import PhysicsBody from "../Util/PhysicBody";
 import Enemy from "./Enemy";
 import Sprite from "./Sprite";
 import MyAnimation from "../Util/Animation";
-import { DinoIdle } from "Animation/DinoAnimation";
+import { DinoIdle } from "../Animation/DinoAnimation";
 
 export default class Dino extends Sprite {
 
