@@ -1,4 +1,4 @@
-import {dino} from "./Dino";
+import {dino} from "./GameObject/Dino";
 import GameWorld from "./GameWorld";
 
 function Clear() {
@@ -9,4 +9,5 @@ export default function Render() {
     Clear();
     const context = GameWorld.context;
     dino.reDraw(context);
+    console.log(dino)
 }

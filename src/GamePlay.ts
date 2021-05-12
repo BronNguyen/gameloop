@@ -1,6 +1,3 @@
-// import GamePlay from "./GamePlay";
-
-// import {input} from './DefineInput';
 import Update from "./Update";
 import Render from "./Render";
 
@@ -8,14 +5,12 @@ export default function GamePlay() {
   let lastTime = window.performance.now();
 
   requestAnimationFrame(loop);
-
+  var isGameRunning = true;
   function loop() {
     const time = window.performance.now();
     const delta = time - lastTime;
 
-    // ProcessInput(input);
-
-    Update(time, delta);
+    Update(time, delta, isGameRunning);
 
     Render();
 
@@ -23,7 +18,4 @@ export default function GamePlay() {
 
     requestAnimationFrame(loop);
   }
-
-  // function ProcessInput(input) {
-  // }
 }
