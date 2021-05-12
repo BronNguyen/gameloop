@@ -10,8 +10,8 @@ class Dino extends Sprite{
   y = 0;
   protected image = new Image(30, 30);
 
-  constructor(w, h,image, x, y) {
-    super(w, h,image, x, y);
+  constructor(image,w, h, x, y) {
+    super(image,w, h, x, y);
     this.width = w;
     this.height = h;
     this.x = x;
@@ -25,15 +25,15 @@ class Dino extends Sprite{
   }
 
   public collisionWith(otherObj: Enemy) {
-    var myleft = this.x;
-    var myright = this.x + this.width;
-    var mytop = this.y;
-    var mybottom = this.y + this.height;
-    var otherleft = otherObj.x;
-    var otherright = otherObj.x + otherObj.width;
-    var othertop = otherObj.y;
-    var otherbottom = otherObj.y + otherObj.height;
-    var crash = true;
+    const myleft = this.x;
+    const myright = this.x + this.width;
+    const mytop = this.y;
+    const mybottom = this.y + this.height;
+    const otherleft = otherObj.x;
+    const otherright = otherObj.x + otherObj.width;
+    const othertop = otherObj.y;
+    const otherbottom = otherObj.y + otherObj.height;
+    let crash = true;
     if (
       mybottom < othertop ||
       mytop > otherbottom ||
@@ -46,4 +46,6 @@ class Dino extends Sprite{
   }
 }
 
-export const dino = new Dino(100, 100,"./assets/dino-idle.png", 0, 550);
+let dinoImg = new Image(30,30);
+dinoImg.src = "./assets/dino-idle.png";
+export const dino = new Dino(dinoImg,100, 100, 0, 550);
