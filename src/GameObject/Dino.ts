@@ -12,6 +12,11 @@ class Dino extends Sprite{
 
   constructor(w, h,image, x, y) {
     super(w, h,image, x, y);
+    this.width = w;
+    this.height = h;
+    this.x = x;
+    this.y = y;
+    this.image = image;
   }
 
   public setPosition(x, y) {

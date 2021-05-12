@@ -12,5 +12,10 @@ export default class Enemy extends Sprite {
 
   constructor(w, h,image, x, y) {
     super(w, h,image, x, y);
+    this.width = w;
+    this.height = h;
+    this.x = x;
+    this.y = y;
+    this.image = image;
   }
 }
