@@ -1,5 +1,4 @@
 import Vector2 from "./Util/Vector2";
-import SuperConsoleLog from "./Util/SuperConsoleLog";
 import State from "./State";
 
 export default function Update(time, delta, state: State) {
@@ -57,6 +56,10 @@ export default function Update(time, delta, state: State) {
     if (inputKey) {
       state.input.RegisterKeyPress(<string>inputKey);
       if (inputKey == "ArrowUp") {
+        // if(Math.floor(time/500)%2==0){
+        //   console.log(dino.y,"dino.y")
+        //   console.log(state.gameWorld.canvas.height - dino.height,'state.gameWorld.canvas.height - dino.height')
+        // }
         if (dino.y < state.gameWorld.canvas.height - dino.height) return;
         dino.dinoBody.setVelocityY(2);
         dino.dinoBody.setMotivationY(12);

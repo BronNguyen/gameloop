@@ -1,4 +1,3 @@
-import SuperConsoleLog from "./SuperConsoleLog";
 import Vector2 from "./Vector2";
 
 export default class PhysicsBody {

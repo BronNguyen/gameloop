@@ -3,7 +3,7 @@ import Enemy from "./Enemy";
 import Sprite from "./Sprite";
 
 export default class Dino extends Sprite {
-  dinoBody = new PhysicsBody(6);
+  dinoBody = new PhysicsBody(8);
   width = 0;
   height = 0;
   x = 0;
