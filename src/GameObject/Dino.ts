@@ -2,7 +2,7 @@ import PhysicsBody from "../Util/PhysicBody";
 import Enemy from "./Enemy";
 import Sprite from "./Sprite";
 
-class Dino extends Sprite{
+export default class Dino extends Sprite {
   dinoBody = new PhysicsBody(6);
   width = 0;
   height = 0;
@@ -10,13 +10,13 @@ class Dino extends Sprite{
   y = 0;
   protected image = new Image(30, 30);
 
-  constructor(image,w, h, x, y) {
-    super(image,w, h, x, y);
+  constructor(image, w, h, x, y) {
+    super(image, w, h, x, y);
     this.width = w;
     this.height = h;
     this.x = x;
     this.y = y;
-    this.image = image;
+    this.image.src = "./assets/dino-idle.png";
   }
 
   public setPosition(x, y) {
@@ -45,7 +45,3 @@ class Dino extends Sprite{
     return crash;
   }
 }
-
-let dinoImg = new Image(30,30);
-dinoImg.src = "./assets/dino-idle.png";
-export const dino = new Dino(dinoImg,100, 100, 0, 550);

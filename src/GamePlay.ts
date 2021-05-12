@@ -1,18 +1,19 @@
 import Update from "./Update";
 import Render from "./Render";
+import State from "./State";
 
 export default function GamePlay() {
   let lastTime = window.performance.now();
+  let state = new State();
 
   requestAnimationFrame(loop);
-  var isGameRunning = true;
   function loop() {
     const time = window.performance.now();
     const delta = time - lastTime;
 
-    Update(time, delta, isGameRunning);
+    Update(time, delta, state);
 
-    Render();
+    Render(state);
 
     lastTime = time;
 

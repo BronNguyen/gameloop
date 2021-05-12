@@ -1,4 +1,4 @@
-class DefineInput {
+export default class DefineInput {
   queue: string[] = [];
   constructor() {}
 
@@ -19,4 +19,3 @@ class DefineInput {
     })
   };
 }
-export const input = new DefineInput();

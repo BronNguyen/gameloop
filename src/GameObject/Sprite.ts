@@ -13,7 +13,10 @@ export default class Sprite {
     this.image = image;
   }
 
-  reDraw(context: CanvasRenderingContext2D) {
-    context.drawImage(this.image, this.x, this.y, this.width, this.height);
+  reDraw(context: CanvasRenderingContext2D, relatedX: number | null, relatedY: number | null) {
+    const spriteImg = this.image;
+    const x = relatedX? relatedX: this.x;
+    const y = relatedY? relatedY: this.y;
+    context.drawImage(spriteImg, x, y, this.width, this.height);
   }
 }

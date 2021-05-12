@@ -1,9 +1,11 @@
-class GameWorld {
+export default class GameWorld {
   context: CanvasRenderingContext2D;
   canvas = <HTMLCanvasElement>document.getElementById("myCanvas");
   gravity = .1 ;
   worldWidth;
   worldHeight;
+    static context: any;
+    static canvas: any;
 
   constructor() {
     this.canvas.width = 1000;
@@ -13,5 +15,3 @@ class GameWorld {
     this.context = <CanvasRenderingContext2D>this.canvas.getContext("2d");
   }
 }
-
-export default new GameWorld();

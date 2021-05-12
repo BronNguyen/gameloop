@@ -1,4 +1,3 @@
-import GameWorld from "../GameWorld";
 import SuperConsoleLog from "./SuperConsoleLog";
 import Vector2 from "./Vector2";
 
@@ -24,17 +23,17 @@ export default class PhysicsBody {
         this.velocity =  new Vector2(this.velocity.x, y);
     }
 
-    GravityForce() {
-        return this.mass * GameWorld.gravity;
+    GravityForce (gravity) {
+        return this.mass * gravity;
     }
 
     setMotivationY(number) {
         this.motivationY = number;
     }
 
-    ConsequentVelocity () {
+    ConsequentVelocity (gravity) {
         const velX = this.velocity.x;
-        const VelY = - this.velocity.y + this.GravityForce();
+        const VelY = - this.velocity.y + this.GravityForce(gravity);
         return new Vector2(velX,VelY);
     }
 }

@@ -1,39 +1,63 @@
 import Vector2 from "./Util/Vector2";
-import GameWorld from "./GameWorld";
-import { input } from "./DefineInput";
-import { dino } from "./GameObject/Dino";
 import SuperConsoleLog from "./Util/SuperConsoleLog";
+import State from "./State";
 
-export default function Update(time, delta, isGameRunning) {
+export default function Update(time, delta, state: State) {
+  const dino = state.dino;
+  const camera = state.camera;
   const dinoBody = dino.dinoBody;
-  const oldPosX = dino.x+10;
+  const oldPosX = dino.x;
   const oldPosY = dino.y;
+  const camOldPosX = camera.camPosX;
+  const camOldPosY = camera.camPosY;
+  const velX = Math.floor(time / 2000) + 1;
+  dino.dinoBody.velocity.x = velX;
+  camera.cameraBody.velocity.x = velX;
 
-  if (isGameRunning) {
+  if (state.isGameRunning) {
     if (dino.dinoBody.motivationY > 0) {
       dino.dinoBody.motivationY -= 1;
     } else {
       dino.dinoBody.velocity.y = 0;
     }
-    const newPosition = () => {
-      const x = oldPosX + dinoBody.ConsequentVelocity().x * delta;
-      let y = oldPosY + dinoBody.ConsequentVelocity().y * delta;
 
-      if (y > GameWorld.worldHeight- dino.height) {
-        y = GameWorld.worldHeight - dino.height;
+    const newCameraPosition = () => {
+      const camX =
+        camOldPosX +
+        camera.cameraBody.ConsequentVelocity(state.gameWorld.gravity).x * delta;
+      const camY =
+        camOldPosY +
+        camera.cameraBody.ConsequentVelocity(state.gameWorld.gravity).y * delta;
+
+      return new Vector2(camX, camY);
+    };
+
+    const newDinoPosition = () => {
+      const x =
+        oldPosX +
+        dinoBody.ConsequentVelocity(state.gameWorld.gravity).x * delta;
+      let y =
+        oldPosY +
+        dinoBody.ConsequentVelocity(state.gameWorld.gravity).y * delta;
+
+      if (y > state.gameWorld.worldHeight - dino.height) {
+        y = state.gameWorld.worldHeight - dino.height;
       }
       if (y < 0) {
         y = 0;
       }
       return new Vector2(x, y);
     };
-    const newPos = newPosition();
-    dino.setPosition(newPos.x, newPos.y);
-    const inputKey = input.queue.pop();
+    const newDinoPos = newDinoPosition();
+    const newCamPos = newCameraPosition();
+    dino.setPosition(newDinoPos.x, newDinoPos.y);
+    camera.setPosition(newCamPos.x, newCamPos.y);
+
+    const inputKey = state.input.queue.pop();
     if (inputKey) {
-      input.RegisterKeyPress(<string>inputKey);
+      state.input.RegisterKeyPress(<string>inputKey);
       if (inputKey == "ArrowUp") {
-        if (dino.y < GameWorld.canvas.height - dino.height) return;
+        if (dino.y < state.gameWorld.canvas.height - dino.height) return;
         dino.dinoBody.setVelocityY(2);
         dino.dinoBody.setMotivationY(12);
       }
