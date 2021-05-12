@@ -2,6 +2,8 @@ import Dino from "./GameObject/Dino";
 import Camera from "./GameObject/Camera";
 import GameWorld from "./GameWorld";
 import DefineInput from "./Util/DefineInput";
+import Enemy from "GameObject/Enemy";
+import SpawningFactory from "./GameObject/SpawningFactory";
 
 export default class State {
     dino: Dino;
@@ -9,9 +11,12 @@ export default class State {
     background: string;
     //this recorded how far bg has gone
     distance = 0;
+    //enemy array
+    enemies: Enemy[] = [];
     camera: Camera;
     gameWorld: GameWorld;
     input: DefineInput;
+    spawningFactory: SpawningFactory;
     isGameRunning;
 
     constructor() {
@@ -21,6 +26,7 @@ export default class State {
         this.input = new DefineInput();
         this.isGameRunning = true;
         this.background = "./assets/ground.png";
+        this.spawningFactory = new SpawningFactory();
         // new Sprite(new Image(30,30),this.gameWorld.canvas.width,26,this.gameWorld.canvas.width/2,this.gameWorld.canvas.height+13);
     }
 }
