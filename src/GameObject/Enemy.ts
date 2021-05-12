@@ -10,7 +10,7 @@ export default class Enemy extends Sprite {
   y = 0;
   protected image = new Image(30,30);
 
-  constructor(w, h,image, x, y) {
+  constructor(image, w, h, x, y) {
     super(w, h,image, x, y);
     this.width = w;
     this.height = h;

@@ -1,14 +1,18 @@
 import PhysicsBody from "../Util/PhysicBody";
 import Enemy from "./Enemy";
 import Sprite from "./Sprite";
+import MyAnimation from "../Util/Animation";
 
 export default class Dino extends Sprite {
+
+  protected image = new Image(30, 30);
+  currentAnimation!: MyAnimation;
   dinoBody = new PhysicsBody(8);
+  duck = false;
   width = 0;
   height = 0;
   x = 0;
   y = 0;
-  protected image = new Image(30, 30);
 
   constructor(image, w, h, x, y) {
     super(image, w, h, x, y);
@@ -43,5 +47,9 @@ export default class Dino extends Sprite {
       crash = false;
     }
     return crash;
+  }
+
+  public DuckAnimation() {
+    const duckImg = "./assets/dino-idle.png";
   }
 }

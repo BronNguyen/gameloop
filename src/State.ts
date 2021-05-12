@@ -1,4 +1,4 @@
-import  Dino from "./GameObject/Dino";
+import Dino from "./GameObject/Dino";
 import Camera from "./GameObject/Camera";
 import GameWorld from "./GameWorld";
 import DefineInput from "./Util/DefineInput";
