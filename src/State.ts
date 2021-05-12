@@ -5,6 +5,10 @@ import DefineInput from "./Util/DefineInput";
 
 export default class State {
     dino: Dino;
+    //this recorded bg's image
+    background: string;
+    //this recorded how far bg has gone
+    distance = 0;
     camera: Camera;
     gameWorld: GameWorld;
     input: DefineInput;
@@ -16,5 +20,7 @@ export default class State {
         this.camera = new Camera(this.gameWorld.canvas.width, this.gameWorld.canvas.height, this.gameWorld.canvas.width/2,this.gameWorld.canvas.height/2);
         this.input = new DefineInput();
         this.isGameRunning = true;
+        this.background = "./assets/ground.png";
+        // new Sprite(new Image(30,30),this.gameWorld.canvas.width,26,this.gameWorld.canvas.width/2,this.gameWorld.canvas.height+13);
     }
 }
