@@ -30,11 +30,7 @@ export default function Update(time, delta, state: State) {
       const camX =
         camOldPosX +
         camera.cameraBody.ConsequentVelocity(state.gameWorld.gravity).x;
-      const camY =
-        camOldPosY +
-        camera.cameraBody.ConsequentVelocity(state.gameWorld.gravity).y * delta/1000;
-
-      return new Vector2(camX, camY);
+      return new Vector2(camX, camOldPosY);
     };
 
     const newDinoPosition = () => {
@@ -43,7 +39,7 @@ export default function Update(time, delta, state: State) {
         dinoBody.ConsequentVelocity(state.gameWorld.gravity).x;
       let y =
         oldPosY +
-        dinoBody.ConsequentVelocity(state.gameWorld.gravity).y * delta/1000;
+        dinoBody.ConsequentVelocity(state.gameWorld.gravity).y * delta;
 
       if (y > state.gameWorld.worldHeight - dino.height) {
         y = state.gameWorld.worldHeight - dino.height;
@@ -72,7 +68,7 @@ export default function Update(time, delta, state: State) {
       if (inputKey== " ") {
         console.log(state.enemies);
         console.log(dino.x,"dino x");
-        console.log(camera.camPosX,"cam x")
+        console.log(dino.y,"dino y")
       }
     }
 
