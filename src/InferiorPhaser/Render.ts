@@ -1,5 +1,5 @@
-import Sprite from "GameObject/Sprite";
-import State from "../InferiorPhaser/State";
+import Sprite from "./Sprite";
+import State from "./State";
 
 export default function Render(state: State) {
   if (state.isGameRunning) {

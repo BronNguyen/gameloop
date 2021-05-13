@@ -1,6 +1,6 @@
 import PhysicsBody from "../Util/PhysicBody";
 import Enemy from "./Enemy";
-import Sprite from "./Sprite";
+import Sprite from "../InferiorPhaser/Sprite";
 import MyAnimation from "../Util/Animation";
 import { DinoIdle } from "../Animation/DinoAnimation";
 
@@ -10,17 +10,10 @@ export default class Dino extends Sprite {
   currentAnimation: MyAnimation;
   dinoBody = new PhysicsBody(8);
   duck = false;
-  width = 0;
-  height = 0;
-  x = 0;
-  y = 0;
+
 
   constructor(image, w, h, x, y) {
     super(image, w, h, x, y);
-    this.width = w;
-    this.height = h;
-    this.x = x;
-    this.y = y;
     this.image.src = "./assets/dino-idle.png";
     this.currentAnimation = DinoIdle;
   }
