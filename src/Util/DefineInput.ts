@@ -1,21 +1,27 @@
 export default class DefineInput {
   queue: string[] = [];
+  currentlyDownKey: string | undefined;
   constructor() {}
 
   input = window.addEventListener(
     "keydown",
-    (event) => this.queue.push(event.key),
-    true
+    (event) => {
+      this.queue.push(event.key),
+    true;
+  this.currentlyDownKey = event.key;
+  }
+
+  );
+
+  releasedInput = window.addEventListener(
+    "keyup",
+    (event) => {
+      this.currentlyDownKey = undefined;
+    }
   );
 
   RegisterKeyPress(input: string) {
     if (input == " " || "ArrowUp" || "ArrowDown" || "ArrowRight" || "ArrowLeft")
-    return input;
+      return input;
   }
-
-  queueExecute = (queue: string[]) => {
-    queue.map((key)=> {
-      this.RegisterKeyPress(key);
-    })
-  };
 }

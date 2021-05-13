@@ -6,10 +6,11 @@ import Enemy from "./GameObject/Enemy";
 export default function Update(time, delta, state: State) {
   // diclaration
   const dino = state.dino;
-  const camera = state.camera;
   const dinoBody = dino.dinoBody;
   const oldPosX = dino.x;
   const oldPosY = dino.y;
+  // camera diclaration
+  const camera = state.camera;
   const camOldPosX = camera.camPosX;
   const camOldPosY = camera.camPosY;
   state.speed+=.01;
@@ -41,8 +42,13 @@ export default function Update(time, delta, state: State) {
         oldPosY +
         dinoBody.ConsequentVelocity(state.gameWorld.gravity).y * delta;
 
+      // check if is GROUNDED, make him on the ground
       if (y > state.gameWorld.worldHeight - dino.height) {
-        y = state.gameWorld.worldHeight - dino.height;
+        if(!dino.duck){
+          y = state.gameWorld.worldHeight - dino.height;
+        } else {
+          y = 510;
+        }
       }
       if (y < 0) {
         y = 0;
@@ -58,7 +64,7 @@ export default function Update(time, delta, state: State) {
 
     const inputKey = state.input.queue.pop();
     if (inputKey) {
-      state.input.RegisterKeyPress(<string>inputKey);
+      // state.input.RegisterKeyPress(<string>inputKey);
       if (inputKey == "ArrowUp") {
         DinoJump(state);
       }
@@ -87,6 +93,15 @@ export default function Update(time, delta, state: State) {
         y = state.gameWorld.canvas.height - newEnemyProperties.h;
       } else {
         y = state.gameWorld.canvas.height * Math.random();
+        if (state.dino.y < state.gameWorld.canvas.height - state.dino.height) {
+          state.dino.dinoBody.setMotivationY(0);
+        }
+        if (!dino.duck){
+          if(!state.input.currentlyDownKey) return;
+          DinoDuck(state)
+        } else {
+          state.dino.duck = false;
+        }
       }
 
       const newEnemy = new Enemy(
@@ -113,14 +128,15 @@ function DinoJump(state: State) {
   state.dino.dinoBody.setMotivationY(12);
 }
 
-function DinoDuck(state: State) {
-  if (state.dino.currentAnimation == DinoDown) return;
+function DinoDuck(state:State) {
+  state.dino.duck = true;
   state.dino.currentAnimation = DinoDown;
   animationUpdate(state.dino.currentAnimation);
-  state.dino.y = state.dino.y + 30;
   if (state.dino.y < state.gameWorld.canvas.height - state.dino.height) {
-    state.dino.dinoBody.setMotivationY(0);
+    return;
   }
+  state.dino.y = 510;
+
 }
 
 function animationUpdate(currentAnimation) {
