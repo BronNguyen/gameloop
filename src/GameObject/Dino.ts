@@ -52,10 +52,9 @@ export default class Dino extends Sprite {
   }
 
   reDrawWithAnimation(context: CanvasRenderingContext2D, relatedX: number | null, relatedY: number | null) {
-    const img = new Image(30,30);
-    img.src = this.currentAnimation.sprite;
+    this.image.src = this.currentAnimation.sprite;
     const x = relatedX? relatedX: this.x;
     const y = relatedY? relatedY: this.y;
-    context.drawImage(img,this.currentAnimation.frameWidth*this.currentAnimation.frameSet[this.currentAnimation.currentIndex],0, this.currentAnimation.frameWidth, this.currentAnimation.frameHeight, x, y,this.width,this.height);
+    context.drawImage(this.image,this.currentAnimation.frameWidth*this.currentAnimation.frameSet[this.currentAnimation.currentIndex],0, this.currentAnimation.frameWidth, this.currentAnimation.frameHeight, x, y,this.width,this.height);
   }
 }
