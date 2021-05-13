@@ -13,11 +13,9 @@ export default class DefineInput {
 
   );
 
-  releasedInput = window.addEventListener(
+  releasedInput = window.addEventListener(  
     "keyup",
-    (event) => {
-      this.currentlyDownKey = undefined;
-    }
+    () => this.currentlyDownKey = undefined,true
   );
 
   RegisterKeyPress(input: string) {

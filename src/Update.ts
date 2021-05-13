@@ -13,11 +13,10 @@ export default function Update(time, delta, state: State) {
   const camera = state.camera;
   const camOldPosX = camera.camPosX;
   const camOldPosY = camera.camPosY;
-  state.speed+=.01;
+  state.speed += 0.01;
   const velX = state.speed;
   dino.dinoBody.velocity.x = velX;
   camera.cameraBody.velocity.x = velX;
-
   if (state.isGameRunning) {
     dino.currentAnimation = DinoRun;
     // animationUpdate(dino.currentAnimation);
@@ -36,18 +35,17 @@ export default function Update(time, delta, state: State) {
 
     const newDinoPosition = () => {
       const x =
-        oldPosX +
-        dinoBody.ConsequentVelocity(state.gameWorld.gravity).x;
+        oldPosX + dinoBody.ConsequentVelocity(state.gameWorld.gravity).x;
       let y =
         oldPosY +
         dinoBody.ConsequentVelocity(state.gameWorld.gravity).y * delta;
 
       // check if is GROUNDED, make him on the ground
       if (y > state.gameWorld.worldHeight - dino.height) {
-        if(!dino.duck){
+        if (!dino.duck) {
           y = state.gameWorld.worldHeight - dino.height;
         } else {
-          y = 510;
+          y = 520;
         }
       }
       if (y < 0) {
@@ -59,7 +57,8 @@ export default function Update(time, delta, state: State) {
     const newCamPos = newCameraPosition();
     dino.setPosition(newDinoPos.x, newDinoPos.y);
     camera.setPosition(newCamPos.x, newCamPos.y);
-
+    const isJumping =
+      state.dino.y < state.gameWorld.canvas.height - state.dino.height;
     // input
 
     const inputKey = state.input.queue.pop();
@@ -69,12 +68,25 @@ export default function Update(time, delta, state: State) {
         DinoJump(state);
       }
       if (inputKey == "ArrowDown") {
-        DinoDuck(state);
+        //check if dino is jumping, then make him fall down quickly, if he's grounded, check if his state is ducking, do nothin
+        // else if he is not ducking, make him duck like a duck
+        if (isJumping) {
+          state.dino.dinoBody.setMotivationY(0);
+        } else {
+          if (!dino.duck) {
+            if (state.input.currentlyDownKey) {
+              DinoDuck(state);
+            } else {
+              state.dino.duck = false;
+              DinoRunAgain(state);
+            }
+          }
+        }
       }
-      if (inputKey== " ") {
-        console.log(state.enemies);
-        console.log(dino.x,"dino x");
-        console.log(dino.y,"dino y")
+      if (inputKey == " ") {
+        console.log(state.input.currentlyDownKey, "key is down");
+        console.log(dino.x, "dino x");
+        console.log(dino.y, "dino y");
       }
     }
 
@@ -93,15 +105,6 @@ export default function Update(time, delta, state: State) {
         y = state.gameWorld.canvas.height - newEnemyProperties.h;
       } else {
         y = state.gameWorld.canvas.height * Math.random();
-        if (state.dino.y < state.gameWorld.canvas.height - state.dino.height) {
-          state.dino.dinoBody.setMotivationY(0);
-        }
-        if (!dino.duck){
-          if(!state.input.currentlyDownKey) return;
-          DinoDuck(state)
-        } else {
-          state.dino.duck = false;
-        }
       }
 
       const newEnemy = new Enemy(
@@ -114,7 +117,10 @@ export default function Update(time, delta, state: State) {
       state.enemies.push(newEnemy);
     } else {
       state.enemies.map((e) => {
-        if(e.x+e.width < state.camera.camPosX) {
+        if(dino.collisionWith(e)) {
+          state.isGameRunning = false;
+        }
+        if (e.x + e.width < state.camera.camPosX) {
           //  destroy enemy
         }
       });
@@ -128,15 +134,19 @@ function DinoJump(state: State) {
   state.dino.dinoBody.setMotivationY(12);
 }
 
-function DinoDuck(state:State) {
+function DinoDuck(state: State) {
+  if (state.dino.y < state.gameWorld.canvas.height - state.dino.height) return;
   state.dino.duck = true;
   state.dino.currentAnimation = DinoDown;
   animationUpdate(state.dino.currentAnimation);
-  if (state.dino.y < state.gameWorld.canvas.height - state.dino.height) {
-    return;
-  }
-  state.dino.y = 510;
+  state.dino.y = 520;
+}
 
+function DinoRunAgain(state: State) {
+  state.dino.duck = false;
+  state.dino.currentAnimation = DinoRun;
+  animationUpdate(state.dino.currentAnimation);
+  state.dino.y = 580;
 }
 
 function animationUpdate(currentAnimation) {

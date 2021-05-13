@@ -1,3 +1,4 @@
-import GamePlay from "./GamePlay";
+import GamePlay from "./Scene/GamePlay";
 
-GamePlay();
+const gamePlayScene = new GamePlay();
+gamePlayScene.ConductGamePlay(gamePlayScene.state);
