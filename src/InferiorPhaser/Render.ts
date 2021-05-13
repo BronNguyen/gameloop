@@ -1,4 +1,3 @@
-import GamePlay from "../Scene/GamePlay";
 import Sprite from "./Sprite";
 import State from "./State";
 
@@ -12,10 +11,16 @@ export default function Render(state: State) {
       state.camera.camPosX - state.dino.x - state.gameWorld.canvas.width / 2.5;
     //offset from the relatedPos to realPos
     const relatedPosOffset = state.dino.x - dinoRelativePosX;
-    state.dino.reDraw(context, dinoRelativePosX, null);
+    //Draw dino
+    ReDrawWithAnimation(state.dino,context,dinoRelativePosX,null);
+    // ReDraw(state.dino, context, dinoRelativePosX, null);
     state.enemies.map((enemy) => {
       if (ShouldBeRendered(enemy, state)) {
-        enemy.reDraw(context, enemy.x - relatedPosOffset, null);
+        if(enemy.fly){
+          ReDrawWithAnimation(enemy,context, enemy.x - relatedPosOffset, null);
+        } else {
+        ReDraw(enemy, context, enemy.x - relatedPosOffset, null);
+      }
       }
     });
     // ***draw bg section***
@@ -83,6 +88,43 @@ function Clear(state: State) {
     state.gameWorld.canvas.height
   );
 }
+
+function ReDraw(
+  obj: Sprite,
+  context: CanvasRenderingContext2D,
+  relatedX: number | null,
+  relatedY: number | null
+) {
+  const spriteImg = obj.getImage();
+  const x = relatedX ? relatedX : obj.x;
+  const y = relatedY ? relatedY : obj.y;
+  context.drawImage(spriteImg, x, y, obj.width, obj.height);
+}
+
+function ReDrawWithAnimation(
+  obj: Sprite,
+  context: CanvasRenderingContext2D,
+  relatedX: number | null,
+  relatedY: number | null
+) {
+  const img = new Image(30, 30);
+  img.src = obj.currentAnimation.sprite;
+  const x = relatedX ? relatedX : obj.x;
+  const y = relatedY ? relatedY : obj.y;
+  context.drawImage(
+    img,
+    obj.currentAnimation.frameWidth *
+      obj.currentAnimation.frameSet[obj.currentAnimation.currentIndex],
+    0,
+    obj.currentAnimation.frameWidth,
+    obj.currentAnimation.frameHeight,
+    x,
+    y,
+    obj.width,
+    obj.height
+  );
+}
+
 function ShouldBeRendered(spriteObj: Sprite, state: State): Boolean {
   const camBorderRight =
     state.camera.camPosX + state.gameWorld.canvas.width / 2;

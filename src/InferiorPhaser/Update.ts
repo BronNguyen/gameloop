@@ -21,6 +21,10 @@ export default function Update(time, delta, state: State) {
   camera.cameraBody.velocity.x = velX;
   if (state.isGameRunning) {
     state.score += 0.25;
+    dino.currentAnimation.count+=1;
+    if(dino.currentAnimation.count == dino.currentAnimation.frameRate) {
+      dino.currentAnimation.ChangeFrame()
+    }
     if (state.score % 100 === 0) {
       gameSound.reachSound.PlaySound();
     }
@@ -124,7 +128,8 @@ export default function Update(time, delta, state: State) {
         newEnemyProperties.w,
         newEnemyProperties.h,
         x,
-        y
+        y,
+        newEnemyProperties.fly,
       );
       state.enemies.push(newEnemy);
     } else {
@@ -161,23 +166,11 @@ function DinoDuck(state: State) {
   if (state.dino.y < state.gameWorld.canvas.height - state.dino.height) return;
   state.dino.duck = true;
   state.dino.currentAnimation = DinoDown;
-  animationUpdate(state.dino.currentAnimation);
   state.dino.y = 520;
 }
 
 function DinoRunAgain(state: State) {
   state.dino.duck = false;
-  // state.dino.currentAnimation = DinoRun;
-  // animationUpdate(state.dino.currentAnimation);
+  state.dino.currentAnimation = DinoRun;
   state.dino.y = 480;
-}
-
-function animationUpdate(currentAnimation) {
-  currentAnimation.count += 1;
-  if (currentAnimation.count == currentAnimation.frameRate) {
-    currentAnimation.count = 0;
-    currentAnimation.currentIndex == currentAnimation.frameSet.length
-      ? (currentAnimation.currentIndex = 0)
-      : (currentAnimation.currentIndex += 1);
-  }
 }
