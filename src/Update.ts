@@ -12,7 +12,8 @@ export default function Update(time, delta, state: State) {
   const oldPosY = dino.y;
   const camOldPosX = camera.camPosX;
   const camOldPosY = camera.camPosY;
-  const velX = Math.floor(time / 2000) + 1;
+  state.speed+=.01;
+  const velX = state.speed;
   dino.dinoBody.velocity.x = velX;
   camera.cameraBody.velocity.x = velX;
 
@@ -28,7 +29,7 @@ export default function Update(time, delta, state: State) {
     const newCameraPosition = () => {
       const camX =
         camOldPosX +
-        camera.cameraBody.ConsequentVelocity(state.gameWorld.gravity).x * delta/1000;
+        camera.cameraBody.ConsequentVelocity(state.gameWorld.gravity).x;
       const camY =
         camOldPosY +
         camera.cameraBody.ConsequentVelocity(state.gameWorld.gravity).y * delta/1000;
@@ -39,7 +40,7 @@ export default function Update(time, delta, state: State) {
     const newDinoPosition = () => {
       const x =
         oldPosX +
-        dinoBody.ConsequentVelocity(state.gameWorld.gravity).x * delta/1000;
+        dinoBody.ConsequentVelocity(state.gameWorld.gravity).x;
       let y =
         oldPosY +
         dinoBody.ConsequentVelocity(state.gameWorld.gravity).y * delta/1000;
@@ -70,7 +71,8 @@ export default function Update(time, delta, state: State) {
       }
       if (inputKey== " ") {
         console.log(state.enemies);
-        console.log(dino.x,"dino x")
+        console.log(dino.x,"dino x");
+        console.log(camera.camPosX,"cam x")
       }
     }
 
@@ -100,8 +102,11 @@ export default function Update(time, delta, state: State) {
       );
       state.enemies.push(newEnemy);
     } else {
-      // TODO
-      state.enemies.map((e) => {});
+      state.enemies.map((e) => {
+        if(e.x+e.width < state.camera.camPosX) {
+          //  destroy enemy
+        }
+      });
     }
   }
 }

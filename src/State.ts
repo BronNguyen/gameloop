@@ -13,6 +13,7 @@ export default class State {
     distance = 0;
     //enemy array
     enemies: Enemy[] = [];
+    speed: number;
     camera: Camera;
     gameWorld: GameWorld;
     input: DefineInput;
@@ -23,6 +24,7 @@ export default class State {
         this.dino = new Dino(new Image(30,30),100, 100, 0, 550);
         this.gameWorld = new GameWorld()
         this.camera = new Camera(this.gameWorld.canvas.width, this.gameWorld.canvas.height, this.gameWorld.canvas.width/2,this.gameWorld.canvas.height/2);
+        this.speed = 10;
         this.input = new DefineInput();
         this.isGameRunning = true;
         this.background = "./assets/ground.png";
