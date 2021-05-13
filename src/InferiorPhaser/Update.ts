@@ -59,9 +59,12 @@ export default function Update(time, delta, state: State) {
     camera.setPosition(newCamPos.x, newCamPos.y);
     const isJumping =
       state.dino.y < state.gameWorld.canvas.height - state.dino.height;
+    const isGrounded = Math.abs(state.dino.y - state.gameWorld.canvas.height - state.dino.height) - 200 < 15;
     // input
 
     const inputKey = state.input.queue.pop();
+    // console.log(state.input.currentlyDownKey, "key is down");
+    // console.log(state.input.wasDownKey, "key was down");
     if (inputKey) {
       // state.input.RegisterKeyPress(<string>inputKey);
       if (inputKey == "ArrowUp") {
@@ -72,22 +75,22 @@ export default function Update(time, delta, state: State) {
         // else if he is not ducking, make him duck like a duck
         if (isJumping) {
           state.dino.dinoBody.setMotivationY(0);
-        } else {
-          if (!dino.duck) {
-            if (state.input.currentlyDownKey) {
-              DinoDuck(state);
-            } else {
-              state.dino.duck = false;
-              DinoRunAgain(state);
-            }
+        }
+        if(isGrounded) {
+          if(!dino.duck)
+          {
+            state.dino.duck = true;
+            DinoDuck(state);
           }
         }
       }
       if (inputKey == " ") {
         console.log(state.input.currentlyDownKey, "key is down");
-        console.log(dino.x, "dino x");
-        console.log(dino.y, "dino y");
       }
+    }
+
+    if(!state.input.currentlyDownKey && !isJumping) {
+      DinoRunAgain(state);
     }
 
     //  enemies factory
@@ -144,9 +147,9 @@ function DinoDuck(state: State) {
 
 function DinoRunAgain(state: State) {
   state.dino.duck = false;
-  state.dino.currentAnimation = DinoRun;
-  animationUpdate(state.dino.currentAnimation);
-  state.dino.y = 580;
+  // state.dino.currentAnimation = DinoRun;
+  // animationUpdate(state.dino.currentAnimation);
+  state.dino.y = 480;
 }
 
 function animationUpdate(currentAnimation) {
