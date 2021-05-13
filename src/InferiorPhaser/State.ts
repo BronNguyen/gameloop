@@ -1,9 +1,9 @@
-import Dino from "./GameObject/Dino";
-import Camera from "./GameObject/Camera";
-import GameWorld from "./GameWorld";
-import DefineInput from "./Util/DefineInput";
-import Enemy from "GameObject/Enemy";
-import SpawningFactory from "./GameObject/SpawningFactory";
+import Dino from "../GameObject/Dino";
+import Camera from "../GameObject/Camera";
+import GameWorld from "../Util/GameWorld";
+import DefineInput from "../Util/DefineInput";
+import Enemy from "../GameObject/Enemy";
+import SpawningFactory from "../GameObject/SpawningFactory";
 
 export default class State {
     dino: Dino;

@@ -1,6 +1,6 @@
-import Update from "../Update";
-import Render from "../Render";
-import State from "../State";
+import Update from "../InferiorPhaser/Update";
+import Render from "../InferiorPhaser/Render";
+import State from "../InferiorPhaser/State";
 
 export default class GamePlay {
   lastTime:number;

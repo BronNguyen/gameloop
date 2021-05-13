@@ -1,7 +1,7 @@
-import Vector2 from "./Util/Vector2";
+import Vector2 from "../Util/Vector2";
 import State from "./State";
-import { DinoDown, DinoRun } from "./Animation/DinoAnimation";
-import Enemy from "./GameObject/Enemy";
+import { DinoDown, DinoRun } from "../Animation/DinoAnimation";
+import Enemy from "../GameObject/Enemy";
 
 export default function Update(time, delta, state: State) {
   // diclaration
