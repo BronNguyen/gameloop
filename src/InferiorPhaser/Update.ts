@@ -2,6 +2,7 @@ import Vector2 from "../Util/Vector2";
 import State from "./State";
 import { DinoDown, DinoRun } from "../Animation/DinoAnimation";
 import Enemy from "../GameObject/Enemy";
+import * as gameSound from "../Sound/Sound";
 
 export default function Update(time, delta, state: State) {
   // diclaration
@@ -13,11 +14,20 @@ export default function Update(time, delta, state: State) {
   const camera = state.camera;
   const camOldPosX = camera.camPosX;
   const camOldPosY = camera.camPosY;
+  //speed calculation
   state.speed += 0.01;
   const velX = state.speed;
   dino.dinoBody.velocity.x = velX;
   camera.cameraBody.velocity.x = velX;
   if (state.isGameRunning) {
+    state.score += 0.25;
+    if (state.score % 100 === 0) {
+      gameSound.reachSound.PlaySound();
+    }
+    if(state.hiScore < state.score) {
+      state.hiScore = state.score;
+      state.allowHiScore = true;
+    }
     dino.currentAnimation = DinoRun;
     // animationUpdate(dino.currentAnimation);
     if (dino.dinoBody.motivationY > 0) {
@@ -59,15 +69,18 @@ export default function Update(time, delta, state: State) {
     camera.setPosition(newCamPos.x, newCamPos.y);
     const isJumping =
       state.dino.y < state.gameWorld.canvas.height - state.dino.height;
-    const isGrounded = Math.abs(state.dino.y - state.gameWorld.canvas.height - state.dino.height) - 200 < 15;
+    const isGrounded =
+      Math.abs(
+        state.dino.y - state.gameWorld.canvas.height - state.dino.height
+      ) -
+        200 <
+      15;
     // input
 
     const inputKey = state.input.queue.pop();
-    // console.log(state.input.currentlyDownKey, "key is down");
-    // console.log(state.input.wasDownKey, "key was down");
     if (inputKey) {
       // state.input.RegisterKeyPress(<string>inputKey);
-      if (inputKey == "ArrowUp") {
+      if (inputKey == "ArrowUp" || " ") {
         DinoJump(state);
       }
       if (inputKey == "ArrowDown") {
@@ -76,20 +89,16 @@ export default function Update(time, delta, state: State) {
         if (isJumping) {
           state.dino.dinoBody.setMotivationY(0);
         }
-        if(isGrounded) {
-          if(!dino.duck)
-          {
+        if (isGrounded) {
+          if (!dino.duck) {
             state.dino.duck = true;
             DinoDuck(state);
           }
         }
       }
-      if (inputKey == " ") {
-        console.log(state.input.currentlyDownKey, "key is down");
-      }
     }
 
-    if(!state.input.currentlyDownKey && !isJumping) {
+    if (!state.input.currentlyDownKey && !isJumping) {
       DinoRunAgain(state);
     }
 
@@ -120,19 +129,30 @@ export default function Update(time, delta, state: State) {
       state.enemies.push(newEnemy);
     } else {
       state.enemies.map((e) => {
-        if(dino.collisionWith(e)) {
+        if (dino.collisionWith(e)) {
+          gameSound.hitSound.PlaySound();
+          state.gameOver = true;
           state.isGameRunning = false;
         }
-        if (e.x + e.width < state.camera.camPosX - state.gameWorld.canvas.width/1.5) {
+        if (
+          e.x + e.width <
+          state.camera.camPosX - state.gameWorld.canvas.width / 1.5
+        ) {
           state.enemies = [];
         }
       });
+    }
+  } else {
+    const restartKey = state.input.queue.pop();
+    if(restartKey == " "){
+      state.RePlay()
     }
   }
 }
 
 function DinoJump(state: State) {
   if (state.dino.y < state.gameWorld.canvas.height - state.dino.height) return;
+  gameSound.jumpSound.PlaySound();
   state.dino.dinoBody.setVelocityY(2.5);
   state.dino.dinoBody.setMotivationY(12);
 }

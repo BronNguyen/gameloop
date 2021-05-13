@@ -4,7 +4,7 @@ import State from "../InferiorPhaser/State";
 
 export default class GamePlay {
   lastTime:number;
-  state:State;;
+  state:State;
   constructor() {
     this.lastTime = window.performance.now();
     this.state = new State();

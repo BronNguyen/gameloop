@@ -4,7 +4,7 @@ import GameWorld from "../Util/GameWorld";
 import DefineInput from "../Util/DefineInput";
 import Enemy from "../GameObject/Enemy";
 import SpawningFactory from "../GameObject/SpawningFactory";
-
+import ScoreHandler from "../Util/ScoreHandler";
 export default class State {
     dino: Dino;
     //this recorded bg's image
@@ -18,6 +18,11 @@ export default class State {
     gameWorld: GameWorld;
     input: DefineInput;
     spawningFactory: SpawningFactory;
+    hiScore = 0;
+    score = 0;
+    gameOver = false;
+    scoreHandler: ScoreHandler;
+    allowHiScore = false;
     isGameRunning;
 
     constructor() {
@@ -29,6 +34,16 @@ export default class State {
         this.isGameRunning = true;
         this.background = "./assets/ground.png";
         this.spawningFactory = new SpawningFactory();
+        this.scoreHandler = new ScoreHandler();
         // new Sprite(new Image(30,30),this.gameWorld.canvas.width,26,this.gameWorld.canvas.width/2,this.gameWorld.canvas.height+13);
+    }
+
+    RePlay() {
+        this.isGameRunning = true;
+        this.gameOver = false;
+        this.enemies = [];
+        this.score = 0;
+        this.speed = 10;
+        this.allowHiScore = false;
     }
 }
