@@ -5,12 +5,10 @@ import MyAnimation from "../Util/Animation";
 import { DinoIdle } from "../Animation/DinoAnimation";
 
 export default class Dino extends Sprite {
-
   protected image = new Image(30, 30);
   currentAnimation: MyAnimation;
   dinoBody = new PhysicsBody(8);
   duck = false;
-
 
   constructor(image, w, h, x, y) {
     super(image, w, h, x, y);
@@ -44,10 +42,25 @@ export default class Dino extends Sprite {
     return crash;
   }
 
-  reDrawWithAnimation(context: CanvasRenderingContext2D, relatedX: number | null, relatedY: number | null) {
+  reDrawWithAnimation(
+    context: CanvasRenderingContext2D,
+    relatedX: number | null,
+    relatedY: number | null
+  ) {
     this.image.src = this.currentAnimation.sprite;
-    const x = relatedX? relatedX: this.x;
-    const y = relatedY? relatedY: this.y;
-    context.drawImage(this.image,this.currentAnimation.frameWidth*this.currentAnimation.frameSet[this.currentAnimation.currentIndex],0, this.currentAnimation.frameWidth, this.currentAnimation.frameHeight, x, y,this.width,this.height);
+    const x = relatedX ? relatedX : this.x;
+    const y = relatedY ? relatedY : this.y;
+    context.drawImage(
+      this.image,
+      this.currentAnimation.frameWidth *
+        this.currentAnimation.frameSet[this.currentAnimation.currentIndex],
+      0,
+      this.currentAnimation.frameWidth,
+      this.currentAnimation.frameHeight,
+      x,
+      y,
+      this.width,
+      this.height
+    );
   }
 }

@@ -120,8 +120,8 @@ export default function Update(time, delta, state: State) {
         if(dino.collisionWith(e)) {
           state.isGameRunning = false;
         }
-        if (e.x + e.width < state.camera.camPosX) {
-          //  destroy enemy
+        if (e.x + e.width < state.camera.camPosX - state.gameWorld.canvas.width/1.5) {
+          state.enemies = [];
         }
       });
     }
@@ -130,7 +130,7 @@ export default function Update(time, delta, state: State) {
 
 function DinoJump(state: State) {
   if (state.dino.y < state.gameWorld.canvas.height - state.dino.height) return;
-  state.dino.dinoBody.setVelocityY(2);
+  state.dino.dinoBody.setVelocityY(2.5);
   state.dino.dinoBody.setMotivationY(12);
 }
 

@@ -7,16 +7,19 @@ export default function Render(state: State) {
     const context = state.gameWorld.context;
     // CAMERA: at the RENDER FUNCTION, we have the camera always follow the dinosaur, so we will draw at the screen (draw into camera screen)
     // the sprites with relative position from the camera!
+
     const dinoRelativePosX =
       state.camera.camPosX - state.dino.x - state.gameWorld.canvas.width / 2.5;
+    //offset from the relatedPos to realPos
+
+    const relatedPosOffset = state.dino.x - dinoRelativePosX
     state.dino.reDraw(context, dinoRelativePosX, null);
 
     state.enemies.map((enemy) => {
       if (ShouldBeRendered(enemy, state)) {
-        enemy.reDraw(context, RelativePosX(enemy, state), null);
+        enemy.reDraw(context, enemy.x- relatedPosOffset, null);
       }
     });
-
     // ***draw bg section***
     const bg = new Image(30, 30);
     bg.src = state.background;
@@ -42,11 +45,6 @@ function Clear(state: State) {
     state.gameWorld.canvas.width,
     state.gameWorld.canvas.height
   );
-}
-// relative pos from object to camera
-function RelativePosX(spriteObj: Sprite, state: State) {
-  // todo: fix this
-  return spriteObj.x- state.camera.camPosX  + state.gameWorld.canvas.width / 2;
 }
 
 function ShouldBeRendered(spriteObj: Sprite, state: State): Boolean {
