@@ -34,7 +34,7 @@ export default class State {
         this.dino = new Dino(new Image(30,30),100, 100, 0, 480);
         this.gameWorld = new GameWorld()
         this.camera = new Camera(this.gameWorld.canvas.width, this.gameWorld.canvas.height, this.gameWorld.canvas.width/2,this.gameWorld.canvas.height/2);
-        this.speed = 10;
+        this.speed = 20;
         this.input = new DefineInput();
         this.isGameRunning = false;
         this.gameOver = false;

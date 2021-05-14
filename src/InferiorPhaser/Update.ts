@@ -1,8 +1,14 @@
 import Vector2 from "../Util/Vector2";
 import State from "./State";
-import { DinoDown, DinoRun } from "../Animation/DinoAnimation";
+import {
+  DinoDown,
+  DinoHurt,
+  DinoJump as DinoHop,
+  DinoRun,
+} from "../Animation/DinoAnimation";
 import Enemy from "../GameObject/Enemy";
 import * as gameSound from "../Sound/Sound";
+import Dino, { DinoStatus } from "..//GameObject/Dino";
 
 export default function Update(time, delta, state: State) {
   // diclaration
@@ -12,66 +18,13 @@ export default function Update(time, delta, state: State) {
   const oldPosY = dino.y;
   // camera diclaration
   const camera = state.camera;
-  const camOldPosX = camera.camPosX;
-  const camOldPosY = camera.camPosY;
+  camera.CameraFollow(dino,state);
   //speed calculation
   state.speed += 0.01;
   const velX = state.speed;
   dino.dinoBody.velocity.x = velX;
-  camera.cameraBody.velocity.x = velX;
   if (state.isGameRunning) {
     //Animation handling
-    state.animationController.CountFrame(dino.currentAnimation);
-    state.enemies.map(e=>{
-      if(e.fly) state.animationController.CountFrame(e.currentAnimation);
-    })
-    state.score += 0.25;
-    if (state.score % 100 === 0) {
-      gameSound.reachSound.PlaySound();
-    }
-    if (state.hiScore < state.score) {
-      state.hiScore = state.score;
-      state.allowHiScore = true;
-    }
-    dino.currentAnimation = DinoRun;
-    // animationUpdate(dino.currentAnimation);
-    if (dino.dinoBody.motivationY > 0) {
-      dino.dinoBody.motivationY -= 1;
-    } else {
-      dino.dinoBody.velocity.y = 0;
-    }
-    // positioning
-    const newCameraPosition = () => {
-      const camX =
-        camOldPosX +
-        camera.cameraBody.ConsequentVelocity(state.gameWorld.gravity).x;
-      return new Vector2(camX, camOldPosY);
-    };
-
-    const newDinoPosition = () => {
-      const x =
-        oldPosX + dinoBody.ConsequentVelocity(state.gameWorld.gravity).x;
-      let y =
-        oldPosY +
-        dinoBody.ConsequentVelocity(state.gameWorld.gravity).y * delta;
-
-      // check if is GROUNDED, make him on the ground
-      if (y > state.gameWorld.worldHeight - dino.height) {
-        if (!dino.duck) {
-          y = state.gameWorld.worldHeight - dino.height;
-        } else {
-          y = 510;
-        }
-      }
-      if (y < 0) {
-        y = 0;
-      }
-      return new Vector2(x, y);
-    };
-    const newDinoPos = newDinoPosition();
-    const newCamPos = newCameraPosition();
-    dino.setPosition(newDinoPos.x, newDinoPos.y);
-    camera.setPosition(newCamPos.x, newCamPos.y);
     const isJumping =
       state.dino.y < state.gameWorld.canvas.height - state.dino.height;
     const isGrounded =
@@ -80,8 +33,37 @@ export default function Update(time, delta, state: State) {
       ) -
         200 <
       15;
+    ChangeAnimation(dino);
+    state.animationController.CountFrame(dino.currentAnimation);
+    state.enemies.map((e) => {
+      if (e.fly) state.animationController.CountFrame(e.currentAnimation);
+    });
+    state.score += 0.25;
+    if (state.score % 100 === 0) {
+      gameSound.reachSound.PlaySound();
+    }
+    if (state.hiScore < state.score) {
+      state.hiScore = state.score;
+      state.allowHiScore = true;
+    }
+    // positioning
+    const newDinoPosition = () => {
+      const x =
+        oldPosX + dinoBody.ConsequentVelocity(state.gameWorld.gravity).x;
+      let y =
+        oldPosY +
+        dinoBody.ConsequentVelocity(state.gameWorld.gravity).y * delta;
+      // CONCERN
+      // check if is GROUNDED, make him on the ground
+      if (isGrounded && dino.status == DinoStatus.Duck) y = 510;
+      if (y > 480 && y != 510) {
+        y = 480
+      }
+      return new Vector2(x, y);
+    };
+    const newDinoPos = newDinoPosition();
+    dino.setPosition(newDinoPos.x, newDinoPos.y);
     // input
-
     const inputKey = state.input.queue.pop();
     if (inputKey) {
       // state.input.RegisterKeyPress(<string>inputKey);
@@ -92,11 +74,10 @@ export default function Update(time, delta, state: State) {
         //check if dino is jumping, then make him fall down quickly, if he's grounded, check if his state is ducking, do nothin
         // else if he is not ducking, make him duck like a duck
         if (isJumping) {
-          state.dino.dinoBody.setMotivationY(0);
         }
         if (isGrounded) {
-          if (!dino.duck) {
-            state.dino.duck = true;
+          if (dino.status != DinoStatus.Duck) {
+            dino.status = DinoStatus.Duck;
             DinoDuck(state);
           }
         }
@@ -136,6 +117,8 @@ export default function Update(time, delta, state: State) {
       state.enemies.map((e) => {
         if (dino.collisionWith(e)) {
           gameSound.hitSound.PlaySound();
+          dino.status = DinoStatus.Die;
+          ChangeAnimation(dino);
           state.eventHandler.GameOver(state);
         }
         if (
@@ -155,21 +138,31 @@ export default function Update(time, delta, state: State) {
 }
 
 function DinoJump(state: State) {
-  if (state.dino.y < state.gameWorld.canvas.height - state.dino.height) return;
+  if (state.dino.status == DinoStatus.Jump) return;
   gameSound.jumpSound.PlaySound();
-  state.dino.dinoBody.setVelocityY(2.5);
-  state.dino.dinoBody.setMotivationY(12);
+  state.dino.status = DinoStatus.Jump
+  state.dino.dinoBody.setVelocityY(1.5);
 }
 
 function DinoDuck(state: State) {
   if (state.dino.y < state.gameWorld.canvas.height - state.dino.height) return;
-  state.dino.duck = true;
-  state.dino.currentAnimation = DinoDown;
+  state.dino.status = DinoStatus.Duck;
   state.dino.y = 510;
 }
 
 function DinoRunAgain(state: State) {
-  state.dino.duck = false;
-  state.dino.currentAnimation = DinoRun;
+  state.dino.status = DinoStatus.Run;
   state.dino.y = 480;
+}
+
+function ChangeAnimation(dino: Dino) {
+  if (dino.status == DinoStatus.Duck) {
+    dino.currentAnimation = DinoDown;
+  } else if (dino.status == DinoStatus.Jump) {
+    dino.currentAnimation = DinoHop;
+  } else if (dino.status == DinoStatus.Die) {
+    dino.currentAnimation = DinoHurt;
+  } else {
+    dino.currentAnimation = DinoRun;
+  }
 }

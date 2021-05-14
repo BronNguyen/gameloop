@@ -3,10 +3,17 @@ import Enemy from "./Enemy";
 import Sprite from "../InferiorPhaser/Sprite";
 import { DinoIdle } from "../Animation/DinoAnimation";
 
+export enum DinoStatus {
+  Run = "run",
+  Jump = "jump",
+  Die = "die",
+  Duck = "duck"
+}
+
 export default class Dino extends Sprite {
   protected image = new Image(30, 30);
-  dinoBody = new PhysicsBody(8);
-  duck = false;
+  dinoBody = new PhysicsBody(1);
+  status = DinoStatus.Run;
 
   constructor(image, w, h, x, y) {
     super(image, w, h, x, y);

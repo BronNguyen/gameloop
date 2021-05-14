@@ -1,9 +1,8 @@
 import Vector2 from "./Vector2";
 
 export default class PhysicsBody {
-    mass = 0;
+    mass = 1;
     //motivation tells that how much frames the dino can keep his velocity
-    motivationY = 0;
     velocity = new Vector2(0,0);
 
     constructor(mass) {
@@ -24,10 +23,6 @@ export default class PhysicsBody {
 
     GravityForce (gravity) {
         return this.mass * gravity;
-    }
-
-    setMotivationY(number) {
-        this.motivationY = number;
     }
 
     ConsequentVelocity (gravity) {

@@ -7,3 +7,5 @@ export const DinoHurt = new MyAnimation("./assets/dino-hurt.png", 80, 94, 10, [0
 export const DinoDown = new MyAnimation("./assets/dino-down.png",118,62,10,[0, 1]);
 
 export const DinoRun = new MyAnimation("./assets/dino-run.png",88,94,10,[2, 3]);
+
+export const DinoJump = new MyAnimation("./assets/dino-run.png",88,94,10,[1]);

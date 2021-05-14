@@ -3,13 +3,13 @@ import State from "./State";
 
 export default function Render(state: State) {
   const context = state.gameWorld.context;
+  // CAMERA: at the RENDER FUNCTION, we have the camera always follow the dinosaur, so we will draw at the screen (draw into camera screen)
+  // the sprites with relative position from the camera!
+  const dinoRelativePosX =
+    state.camera.camPosX - state.dino.x - state.gameWorld.canvas.width / 2.5;
   context.font = "30px CustomFont";
   if (state.isGameRunning) {
     Clear(state);
-    // CAMERA: at the RENDER FUNCTION, we have the camera always follow the dinosaur, so we will draw at the screen (draw into camera screen)
-    // the sprites with relative position from the camera!
-    const dinoRelativePosX =
-      state.camera.camPosX - state.dino.x - state.gameWorld.canvas.width / 2.5;
     //offset from the relatedPos to realPos
     const relatedPosOffset = state.dino.x - dinoRelativePosX;
     //Draw dino
@@ -70,6 +70,7 @@ export default function Render(state: State) {
         550,
         50
       );
+      ReDrawWithAnimation(state.dino, context, dinoRelativePosX, null);
       state.gameWorld.canvas.addEventListener("mousedown", (e) => {
         state.eventHandler.RePlay(state);
       });
@@ -134,8 +135,8 @@ function ReDrawWithAnimation(
     obj.currentAnimation.frameHeight,
     x,
     y,
-    obj.width,
-    obj.height
+    obj.currentAnimation.frameWidth,
+    obj.currentAnimation.frameHeight
   );
 }
 
