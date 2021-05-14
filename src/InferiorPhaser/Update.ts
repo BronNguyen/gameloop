@@ -60,7 +60,7 @@ export default function Update(time, delta, state: State) {
         if (!dino.duck) {
           y = state.gameWorld.worldHeight - dino.height;
         } else {
-          y = 520;
+          y = 510;
         }
       }
       if (y < 0) {
@@ -120,7 +120,7 @@ export default function Update(time, delta, state: State) {
       if (!newEnemyProperties.fly) {
         y = state.gameWorld.canvas.height - newEnemyProperties.h;
       } else {
-        y = state.gameWorld.canvas.height * Math.random();
+        y = 433 * Math.random();
       }
 
       const newEnemy = new Enemy(
@@ -165,7 +165,7 @@ function DinoDuck(state: State) {
   if (state.dino.y < state.gameWorld.canvas.height - state.dino.height) return;
   state.dino.duck = true;
   state.dino.currentAnimation = DinoDown;
-  state.dino.y = 520;
+  state.dino.y = 510;
 }
 
 function DinoRunAgain(state: State) {
