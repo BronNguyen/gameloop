@@ -15,7 +15,7 @@ export enum GameStatus {
     GameOver = "game over",
 }
 export default class State {
-    dino: Dino;
+    dino : Dino;
     //this recorded bg's image
     background: string;
     //this recorded how far bg has gone
@@ -29,13 +29,13 @@ export default class State {
     spawningFactory: SpawningFactory;
     hiScore = 0;
     score = 0;
+    departX = 0;
     scoreHandler: ScoreHandler;
     eventHandler: EventHandler;
     allowHighScore =  false;
     animationController: AnimationController;
     theKiller!: Enemy;
     gameStatus = GameStatus.Ready;
-    newGame = true;
 
     constructor() {
         this.dino = new Dino(new Image(30,30),100, 100, 0, 480);
@@ -44,7 +44,6 @@ export default class State {
         this.speed = 20;
         this.input = new DefineInput();
         this.gameStatus = GameStatus.Ready;
-        this.newGame = true;
         this.background = "./assets/ground.png";
         this.spawningFactory = new SpawningFactory();
         this.scoreHandler = new ScoreHandler();

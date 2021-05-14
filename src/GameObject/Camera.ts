@@ -18,9 +18,9 @@ export default class Camera {
     this.camPosY = y;
   }
 
-  CameraFollow(gameObject: Sprite, state: State){
-    const camX = gameObject.x + state.gameWorld.canvas.width/2;
-    const camY = state.gameWorld.canvas.height/2;
+  cameraFollow(gameObject: Sprite,  state: State){
+    const camX = gameObject.x +  state.gameWorld.canvas.width/2;
+    const camY =  state.gameWorld.canvas.height/2;
     this.setPosition(camX,camY);
   }
 }

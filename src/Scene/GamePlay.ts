@@ -1,28 +1,28 @@
-import Update from "../InferiorPhaser/Update";
-import Render from "../InferiorPhaser/Render";
+import update from "../InferiorPhaser/Update";
+import render from "../InferiorPhaser/Render";
 import State from "../InferiorPhaser/State";
 
 export default class GamePlay {
-  lastTime:number;
-  state:State;
+  lastTime: number;
+   state: State;
   constructor() {
     this.lastTime = window.performance.now();
     this.state = new State();
   }
 
-  ConductGamePlay(state:State) {
+  conductGamePlay( state: State) {
     const loop = () => {
       const time = window.performance.now();
       const delta = time - this.lastTime;
 
-      Update(time, delta, state);
+      update(time, delta, state);
 
-      Render(state);
+      render(state);
 
       this.lastTime = time;
 
       requestAnimationFrame(loop);
-    }
+    };
     requestAnimationFrame(loop);
   }
 }

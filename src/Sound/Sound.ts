@@ -7,11 +7,8 @@ class Sound {
         this.sound.style.display = "none";
         document.body.appendChild(this.sound);
     }
-    PlaySound() {
+    playSound() {
         this.sound.play();
-    }
-    StopSound() {
-        this.sound.pause();
     }
 }
 

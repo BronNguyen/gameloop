@@ -1,7 +1,7 @@
 import PhysicsBody from "../Util/PhysicBody";
 import Enemy from "./Enemy";
 import Sprite from "../InferiorPhaser/Sprite";
-import { DinoIdle } from "../Animation/DinoAnimation";
+import { dinoIdle } from "../Animation/DinoAnimation";
 
 export enum DinoStatus {
   Run = "run",
@@ -13,12 +13,12 @@ export enum DinoStatus {
 export default class Dino extends Sprite {
   protected image = new Image(30, 30);
   dinoBody = new PhysicsBody(1);
-  status = DinoStatus.Run;
+  status =  DinoStatus.Run;
 
   constructor(image, w, h, x, y) {
     super(image, w, h, x, y);
     this.image.src = "./assets/dino-idle.png";
-    this.currentAnimation = DinoIdle;
+    this.currentAnimation = dinoIdle;
   }
 
   public setPosition(x, y) {
