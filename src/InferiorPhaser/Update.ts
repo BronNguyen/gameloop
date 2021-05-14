@@ -1,5 +1,5 @@
 import Vector2 from "../Util/Vector2";
-import State from "./State";
+import State, { GameStatus } from "./State";
 import {
   DinoDown,
   DinoHurt,
@@ -18,12 +18,14 @@ export default function Update(time, delta, state: State) {
   const oldPosY = dino.y;
   // camera diclaration
   const camera = state.camera;
-  camera.CameraFollow(dino,state);
+  camera.CameraFollow(dino, state);
   //speed calculation
   state.speed += 0.01;
-  const velX = state.speed;
-  dino.dinoBody.velocity.x = velX;
-  if (state.isGameRunning) {
+  dino.dinoBody.velocity.x = state.speed;
+  if (state.gameStatus == GameStatus.IsRunning) {
+    dino.status == DinoStatus.Jump
+      ? (dinoBody.takeOffTime += delta)
+      : (dinoBody.takeOffTime = 0);
     //Animation handling
     const isJumping =
       state.dino.y < state.gameWorld.canvas.height - state.dino.height;
@@ -44,20 +46,18 @@ export default function Update(time, delta, state: State) {
     }
     if (state.hiScore < state.score) {
       state.hiScore = state.score;
-      state.allowHiScore = true;
+      state.allowHighScore = true;
     }
     // positioning
     const newDinoPosition = () => {
-      const x =
-        oldPosX + dinoBody.ConsequentVelocity(state.gameWorld.gravity).x;
+      const x = oldPosX + dinoBody.velocity.x;
       let y =
-        oldPosY +
-        dinoBody.ConsequentVelocity(state.gameWorld.gravity).y * delta;
-      // CONCERN
+        oldPosY -
+        (dinoBody.ConsequentVelocity(state.gameWorld.gravity).y * delta) / 1000;
       // check if is GROUNDED, make him on the ground
       if (isGrounded && dino.status == DinoStatus.Duck) y = 510;
       if (y > 480 && y != 510) {
-        y = 480
+        y = 480;
       }
       return new Vector2(x, y);
     };
@@ -66,7 +66,6 @@ export default function Update(time, delta, state: State) {
     // input
     const inputKey = state.input.queue.pop();
     if (inputKey) {
-      // state.input.RegisterKeyPress(<string>inputKey);
       if (inputKey == "ArrowUp" || " ") {
         DinoJump(state);
       }
@@ -74,10 +73,10 @@ export default function Update(time, delta, state: State) {
         //check if dino is jumping, then make him fall down quickly, if he's grounded, check if his state is ducking, do nothin
         // else if he is not ducking, make him duck like a duck
         if (isJumping) {
+          dinoBody.takeOffTime *= 2;
         }
         if (isGrounded) {
           if (dino.status != DinoStatus.Duck) {
-            dino.status = DinoStatus.Duck;
             DinoDuck(state);
           }
         }
@@ -119,7 +118,8 @@ export default function Update(time, delta, state: State) {
           gameSound.hitSound.PlaySound();
           dino.status = DinoStatus.Die;
           ChangeAnimation(dino);
-          state.eventHandler.GameOver(state);
+          state.theKiller = e;
+          state.eventHandler.SetGameStatus(state,GameStatus.GameOver);
         }
         if (
           e.x + e.width <
@@ -140,12 +140,11 @@ export default function Update(time, delta, state: State) {
 function DinoJump(state: State) {
   if (state.dino.status == DinoStatus.Jump) return;
   gameSound.jumpSound.PlaySound();
-  state.dino.status = DinoStatus.Jump
-  state.dino.dinoBody.setVelocityY(1.5);
+  state.dino.status = DinoStatus.Jump;
+  state.dino.dinoBody.setVelocityY(2200);
 }
 
 function DinoDuck(state: State) {
-  if (state.dino.y < state.gameWorld.canvas.height - state.dino.height) return;
   state.dino.status = DinoStatus.Duck;
   state.dino.y = 510;
 }

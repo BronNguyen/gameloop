@@ -1,7 +1,7 @@
 export default class GameWorld {
   context: CanvasRenderingContext2D;
   canvas = <HTMLCanvasElement>document.getElementById("myCanvas");
-  gravity = .125 ;
+  gravity = 9.8 ;
   worldWidth;
   worldHeight;
     static context: any;

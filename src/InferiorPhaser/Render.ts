@@ -7,11 +7,11 @@ export default function Render(state: State) {
   // the sprites with relative position from the camera!
   const dinoRelativePosX =
     state.camera.camPosX - state.dino.x - state.gameWorld.canvas.width / 2.5;
+  //offset from the relatedPos to realPos
+  const relatedPosOffset = state.dino.x - dinoRelativePosX;
   context.font = "30px CustomFont";
-  if (state.isGameRunning) {
+  if (state.gameStatus == "is running") {
     Clear(state);
-    //offset from the relatedPos to realPos
-    const relatedPosOffset = state.dino.x - dinoRelativePosX;
     //Draw dino
     ReDrawWithAnimation(state.dino, context, dinoRelativePosX, null);
     // ReDraw(state.dino, context, dinoRelativePosX, null);
@@ -25,16 +25,16 @@ export default function Render(state: State) {
       }
     });
     // ***draw bg section***
-    const bg = new Image(30, 30);
+    const bg = new Image(2400,26);
     bg.src = state.background;
     //DRAW bg1:
-    context.drawImage(bg, state.distance, state.gameWorld.canvas.height - 28);
+    context.drawImage(bg, state.distance, state.gameWorld.canvas.height - 28,state.gameWorld.canvas.width,26);
     //DRAW bg2:
     context.drawImage(
       bg,
-      state.distance - state.gameWorld.canvas.width,
+      state.distance + state.gameWorld.canvas.width,
       state.gameWorld.canvas.height - 28
-    );
+    ,state.gameWorld.canvas.width,26);
     state.distance -= state.dino.dinoBody.velocity.x;
     if (Math.abs(state.distance) >= state.gameWorld.canvas.width)
       state.distance = 0;
@@ -43,14 +43,15 @@ export default function Render(state: State) {
       820,
       50
     );
-    if (state.allowHiScore)
+    if (state.allowHighScore)
       context.fillText(
         "HI:" + state.scoreHandler.ScoreToText(Math.floor(state.hiScore)),
         550,
         50
       );
   } else {
-    if (state.gameOver) {
+    if (state.gameStatus == "game over") {
+      Clear(state);
       const gameOverImg = new Image(380, 21);
       const rePlayImg = new Image(72, 64);
       gameOverImg.src = "./assets/game-over.png";
@@ -70,10 +71,30 @@ export default function Render(state: State) {
         550,
         50
       );
+      context.fillText(
+        state.scoreHandler.ScoreToText(Math.floor(state.score)),
+        820,
+        50
+      );
       ReDrawWithAnimation(state.dino, context, dinoRelativePosX, null);
       state.gameWorld.canvas.addEventListener("mousedown", (e) => {
         state.eventHandler.RePlay(state);
       });
+      if (state.theKiller.fly) {
+        ReDrawWithAnimation(
+          state.theKiller,
+          context,
+          state.theKiller.x - relatedPosOffset,
+          null
+        );
+      } else {
+        ReDraw(
+          state.theKiller,
+          context,
+          state.theKiller.x - relatedPosOffset,
+          null
+        );
+      }
     } else {
       if (state.newGame) {
         context.fillText(

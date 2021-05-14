@@ -7,6 +7,13 @@ import SpawningFactory from "../GameObject/SpawningFactory";
 import ScoreHandler from "../Util/ScoreHandler";
 import EventHandler from "../Controller/EventHandler";
 import AnimationController from "../Controller/AnimationController";
+
+export enum GameStatus {
+    Start = "start",
+    Ready = "is ready",
+    IsRunning = "is running",
+    GameOver = "game over",
+}
 export default class State {
     dino: Dino;
     //this recorded bg's image
@@ -22,12 +29,12 @@ export default class State {
     spawningFactory: SpawningFactory;
     hiScore = 0;
     score = 0;
-    gameOver = false;
     scoreHandler: ScoreHandler;
     eventHandler: EventHandler;
+    allowHighScore =  false;
     animationController: AnimationController;
-    allowHiScore = false;
-    isGameRunning = false;
+    theKiller!: Enemy;
+    gameStatus = GameStatus.Ready;
     newGame = true;
 
     constructor() {
@@ -36,14 +43,12 @@ export default class State {
         this.camera = new Camera(this.gameWorld.canvas.width, this.gameWorld.canvas.height, this.gameWorld.canvas.width/2,this.gameWorld.canvas.height/2);
         this.speed = 20;
         this.input = new DefineInput();
-        this.isGameRunning = false;
-        this.gameOver = false;
+        this.gameStatus = GameStatus.Ready;
         this.newGame = true;
         this.background = "./assets/ground.png";
         this.spawningFactory = new SpawningFactory();
         this.scoreHandler = new ScoreHandler();
         this.eventHandler = new EventHandler();
         this.animationController = new AnimationController();
-        // new Sprite(new Image(30,30),this.gameWorld.canvas.width,26,this.gameWorld.canvas.width/2,this.gameWorld.canvas.height+13);
     }
 }
