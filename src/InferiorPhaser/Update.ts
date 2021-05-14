@@ -20,15 +20,16 @@ export default function Update(time, delta, state: State) {
   dino.dinoBody.velocity.x = velX;
   camera.cameraBody.velocity.x = velX;
   if (state.isGameRunning) {
+    //Animation handling
+    state.animationController.CountFrame(dino.currentAnimation);
+    state.enemies.map(e=>{
+      if(e.fly) state.animationController.CountFrame(e.currentAnimation);
+    })
     state.score += 0.25;
-    dino.currentAnimation.count+=1;
-    if(dino.currentAnimation.count == dino.currentAnimation.frameRate) {
-      dino.currentAnimation.ChangeFrame()
-    }
     if (state.score % 100 === 0) {
       gameSound.reachSound.PlaySound();
     }
-    if(state.hiScore < state.score) {
+    if (state.hiScore < state.score) {
       state.hiScore = state.score;
       state.allowHiScore = true;
     }
@@ -105,7 +106,6 @@ export default function Update(time, delta, state: State) {
     if (!state.input.currentlyDownKey && !isJumping) {
       DinoRunAgain(state);
     }
-
     //  enemies factory
     if (state.enemies.length < 1) {
       // state.enemies.push(new Enemy())
@@ -129,15 +129,14 @@ export default function Update(time, delta, state: State) {
         newEnemyProperties.h,
         x,
         y,
-        newEnemyProperties.fly,
+        newEnemyProperties.fly
       );
       state.enemies.push(newEnemy);
     } else {
       state.enemies.map((e) => {
         if (dino.collisionWith(e)) {
           gameSound.hitSound.PlaySound();
-          state.gameOver = true;
-          state.isGameRunning = false;
+          state.eventHandler.GameOver(state);
         }
         if (
           e.x + e.width <
@@ -149,8 +148,8 @@ export default function Update(time, delta, state: State) {
     }
   } else {
     const restartKey = state.input.queue.pop();
-    if(restartKey == " "){
-      state.RePlay()
+    if (restartKey == " ") {
+      state.eventHandler.RePlay(state);
     }
   }
 }

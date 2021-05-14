@@ -14,11 +14,4 @@ export default class MyAnimation {
         this.frameRate = fr;
         this.frameSet = fs;
     }
-    ChangeFrame() {
-        this.count = 0;
-        this.currentIndex += 1;
-        this.currentIndex >= this.frameSet.length
-        ? (this.currentIndex = 0)
-        : true;
-    }
 }

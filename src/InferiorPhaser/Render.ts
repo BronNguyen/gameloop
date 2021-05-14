@@ -2,9 +2,10 @@ import Sprite from "./Sprite";
 import State from "./State";
 
 export default function Render(state: State) {
+  const context = state.gameWorld.context;
+  context.font = "30px CustomFont";
   if (state.isGameRunning) {
     Clear(state);
-    const context = state.gameWorld.context;
     // CAMERA: at the RENDER FUNCTION, we have the camera always follow the dinosaur, so we will draw at the screen (draw into camera screen)
     // the sprites with relative position from the camera!
     const dinoRelativePosX =
@@ -12,15 +13,15 @@ export default function Render(state: State) {
     //offset from the relatedPos to realPos
     const relatedPosOffset = state.dino.x - dinoRelativePosX;
     //Draw dino
-    ReDrawWithAnimation(state.dino,context,dinoRelativePosX,null);
+    ReDrawWithAnimation(state.dino, context, dinoRelativePosX, null);
     // ReDraw(state.dino, context, dinoRelativePosX, null);
     state.enemies.map((enemy) => {
       if (ShouldBeRendered(enemy, state)) {
-        if(enemy.fly){
-          ReDrawWithAnimation(enemy,context, enemy.x - relatedPosOffset, null);
+        if (enemy.fly) {
+          ReDrawWithAnimation(enemy, context, enemy.x - relatedPosOffset, null);
         } else {
-        ReDraw(enemy, context, enemy.x - relatedPosOffset, null);
-      }
+          ReDraw(enemy, context, enemy.x - relatedPosOffset, null);
+        }
       }
     });
     // ***draw bg section***
@@ -37,7 +38,6 @@ export default function Render(state: State) {
     state.distance -= state.dino.dinoBody.velocity.x;
     if (Math.abs(state.distance) >= state.gameWorld.canvas.width)
       state.distance = 0;
-    context.font = "30px CustomFont";
     context.fillText(
       state.scoreHandler.ScoreToText(Math.floor(state.score)),
       820,
@@ -51,7 +51,6 @@ export default function Render(state: State) {
       );
   } else {
     if (state.gameOver) {
-      const context = state.gameWorld.context;
       const gameOverImg = new Image(380, 21);
       const rePlayImg = new Image(72, 64);
       gameOverImg.src = "./assets/game-over.png";
@@ -66,15 +65,30 @@ export default function Render(state: State) {
         state.gameWorld.canvas.width / 2 - rePlayImg.width / 2,
         state.gameWorld.canvas.height / 2 + rePlayImg.height / 2
       );
-      context.font = "30px CustomFont";
       context.fillText(
         "HI:" + state.scoreHandler.ScoreToText(Math.floor(state.hiScore)),
         550,
         50
       );
       state.gameWorld.canvas.addEventListener("mousedown", (e) => {
-        state.RePlay();
+        state.eventHandler.RePlay(state);
       });
+    } else {
+      if (state.newGame) {
+        context.fillText(
+          "Press SpaceBar to begin running",
+          30,
+          state.gameWorld.canvas.height / 2
+        );
+      }
+      const dinoRelativePosX =
+        state.camera.camPosX -
+        state.dino.x -
+        state.gameWorld.canvas.width / 2.5;
+      //offset from the relatedPos to realPos
+      const relatedPosOffset = state.dino.x - dinoRelativePosX;
+      //Draw dino
+      ReDrawWithAnimation(state.dino, context, dinoRelativePosX, null);
     }
   }
 }
