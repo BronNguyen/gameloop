@@ -3,7 +3,6 @@ import Vector2 from "./Vector2";
 export default class PhysicsBody {
     mass = 1;
     takeOffTime = 0;
-    //motivation tells that how much frames the Dino can keep his velocity
     velocity = new Vector2(0,0);
 
     constructor(mass) {

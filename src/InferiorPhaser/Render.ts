@@ -1,5 +1,8 @@
+import Dino from "GameObject/Dino";
 import Sprite from "./Sprite";
 import State, { GameStatus } from "./State";
+
+
 
 export default function render( state: State) {
   const context =  state.gameWorld.context;

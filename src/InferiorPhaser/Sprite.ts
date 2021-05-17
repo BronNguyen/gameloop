@@ -5,7 +5,7 @@ export default class Sprite {
   height = 0;
   x = 0;
   y = 0;
-  currentAnimation!: MyAnimation;
+  currentAnimation?: MyAnimation;
   protected image = new Image();
 
   constructor(image,w, h,  x, y) {
