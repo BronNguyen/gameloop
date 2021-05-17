@@ -13,7 +13,7 @@ export default class GameplayScene extends Scene {
 
   create() {
     this.gameObjects.push(
-      (this.dino = new Dino(new Image(30, 30), 100, 100, 0, 510))
+      (this.dino = new Dino(this,new Image(30, 30), 100, 100, 0, 510))
     );
     this.textObjects.push(
       new TextObject(

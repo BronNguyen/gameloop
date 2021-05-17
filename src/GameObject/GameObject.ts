@@ -1,8 +1,9 @@
-import MyAnimation from "../SuperiorPhaser/Animations";
+import Scene from "../SuperiorPhaser/Scene";
+import MyAnimation from "../Animation/Animations";
 import Camera from "./Camera";
 
 export default class GameObject {
-  protected currentScene;
+  protected currentScene: Scene;
   width = 0;
   height = 0;
   x = 0;
@@ -12,8 +13,8 @@ export default class GameObject {
   currentAnimation?: MyAnimation;
   protected image = new Image();
 
-  constructor(image, w, h, x, y) {
-    this.currentScene = 
+  constructor(scene,image, w, h, x, y) {
+    this.currentScene = scene;
     this.width = w;
     this.height = h;
     this.x = x;

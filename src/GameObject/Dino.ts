@@ -4,7 +4,7 @@ import {
   dinoHurt,
   dinoJump as dinoHop,
   dinoRun,
-} from "../SuperiorPhaser/Animations";
+} from "../Animation/Animations";
 import Vector2 from "Util/Vector2";
 import GameObject from "./GameObject";
 
@@ -16,13 +16,13 @@ export enum DinoStatus {
 }
 
 export default class Dino extends GameObject {
-  protected image = new Image(30, 30);
   status = DinoStatus.Run;
   takeOffTime = 0;
+  gravity = 9.8;
   velocity = new Vector2(0, 0);
 
-  constructor(image, w, h, x, y) {
-    super(image, w, h, x, y);
+  constructor(scene,image, w, h, x, y) {
+    super(scene,image, w, h, x, y);
     this.image.src = "./assets/dino-idle.png";
     this.currentAnimation = dinoIdle;
   }
@@ -41,7 +41,7 @@ export default class Dino extends GameObject {
   }
 
   consequentVelocity(gravity) {
-    if (!this.velocity) return;
+    if (!this.velocity) return new Vector2(0,0);
     const velX = this.velocity.x;
     const VelY = this.velocity.y - this.fallingVelocity(gravity);
     return new Vector2(velX, VelY);
@@ -57,8 +57,20 @@ export default class Dino extends GameObject {
         ? (this.takeOffTime += delta)
         : (this.takeOffTime = 0);
     }
-    const isJumping = this.y < 510;
-    const isGrounded = this.y == 510;
+    const isJumping = this.y < 510;//check again if bug
+    const isGrounded = this.y == 510;//check again if bug
+    this.changeAnimation();
+    this.currentAnimation?.countFrame();
+    const newY = () => {
+      let y =  this.y - this.consequentVelocity(this.gravity).y * delta /1000;
+      if (isGrounded && this.status == DinoStatus.Duck) y = 510;
+      if (y > 480 && y != 510) y = 480;
+      return y;
+    }
+    this.setPosition(this.x, newY);
+    //input section
+
+    //end input section
   }
 
   public collisionWith(otherObj: GameObject) {
@@ -81,7 +93,8 @@ export default class Dino extends GameObject {
     }
     return crash;
   }
-  changeAnimation() {
+
+  changeAnimation() { 
     if (this.status == DinoStatus.Duck) {
       this.currentAnimation = dinoDown;
     } else if (this.status == DinoStatus.Jump) {

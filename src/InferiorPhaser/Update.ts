@@ -37,9 +37,11 @@ export default function  update(time, delta,  state: State) {
       15;
     changeAnimation(dino);
      state.animationController.countFrame(dino.currentAnimation);
+    //  enemy update
      state.enemies.map((e) => {
       if (e.fly)  state.animationController.countFrame(e.currentAnimation);
     });
+    //score update
      state.score += 0.25;
     if ( state.score % 100 === 0) {
       gameSound.reachSound.playSound();
