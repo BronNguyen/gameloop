@@ -1,16 +1,26 @@
-import Game from "./Game";
 import Scene from "./Scene";
 
 export default class SceneManager {
-    // game!: Game
     scenes: Scene[] = [];
+    activeScene!: Scene;
+
+    constructor() {
+      this.create();
+    };
 
     add(scene) {
       this.scenes.push(scene)
     }
+
+    switchScene(scene: Scene) {
+      this.activeScene = scene;
+    }
+
+    create() {
+      this.activeScene.create();
+    }
     update(time, delta) {
-      this.scenes.forEach(scene=>scene.update(time, delta))
+      this.activeScene.update(time,delta);
     }
   }
 
-  export const sceneManager = new SceneManager();

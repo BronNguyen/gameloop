@@ -1,4 +1,4 @@
-import SceneManager, {sceneManager} from "./SceneManager";
+import SceneManager from "./SceneManager";
 import Renderer from "./Renderer";
 import StepManager from "./stepManager";
 import InputManager from "./InputManager";
@@ -9,14 +9,13 @@ export default class Game {
   stepManager: StepManager;
   inputManager: InputManager;
   lastTime: number;
-  // objects: Object
 
   constructor() {
-    this.renderer = new Renderer(this);
-    this.stepManager = new StepManager();
-    this.sceneManager = sceneManager;
-    this.inputManager = new InputManager();
     this.lastTime = window.performance.now();
+    this.renderer = new Renderer(this);
+    this.sceneManager = new SceneManager();
+    this.stepManager = new StepManager(this);
+    this.inputManager = new InputManager();
   }
 
   start() {
@@ -26,7 +25,7 @@ export default class Game {
   loop() {
     const time = window.performance.now();
     const delta = time - this.lastTime;
-    this.inputManager.handle();
+    // this.inputManager.handle();
     this.stepManager.update(time, delta);
     this.renderer.render();
 

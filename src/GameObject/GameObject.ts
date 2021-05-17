@@ -7,6 +7,8 @@ export default class GameObject {
   height = 0;
   x = 0;
   y = 0;
+  relativePosX = 0;
+  relativePosY = 0;
   currentAnimation?: MyAnimation;
   protected image = new Image();
 
@@ -17,8 +19,14 @@ export default class GameObject {
     this.y = y;
     this.image = image;
   }
+
   getImage() {
     return this.image;
+  }
+
+  getRelativePosision(camera: Camera) {
+    this.relativePosX = this.x - camera.x;
+    this.relativePosY = this.y - camera.y;
   }
 }
 
@@ -82,4 +90,45 @@ export class Dino extends GameObject {
   }
 }
 
-class Bird extends GameObject {}
+export class Enemy extends GameObject {
+  fly = false;
+  constructor(image, w, h, x, y) {
+    super(image, w, h, x, y);
+  }
+}
+
+export class Camera {
+  width;
+  height;
+  x;
+  y;
+
+  constructor(w, h, x, y) {
+    this.width = w;
+    this.height = h;
+    this.x = x;
+    this.y = y;
+  }
+
+  public setPosition(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  follow(gameObject: GameObject) {
+    const camX = gameObject.x;
+    const camY = gameObject.y;
+    this.setPosition(camX, camY);
+  }
+}
+
+export class TextObject {
+  x;
+  y;
+  content = "";
+  constructor(x, y, content) {
+    this.x = x;
+    this.y = y;
+    this.content = content;
+  }
+}

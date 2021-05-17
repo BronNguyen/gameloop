@@ -9,3 +9,5 @@ export default class ScoreHandler {
     return scoreText.join("");
   }
 }
+
+export const scoreHandler = new ScoreHandler();

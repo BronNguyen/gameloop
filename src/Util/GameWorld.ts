@@ -1,11 +1,11 @@
 export default class GameWorld {
   context: CanvasRenderingContext2D;
   canvas = <HTMLCanvasElement>document.getElementById("myCanvas");
-  gravity = 9.8 ;
+  gravity = 9.8;
   worldWidth;
   worldHeight;
-    static context: any;
-    static canvas: any;
+  static context: any;
+  static canvas: any;
 
   constructor() {
     this.canvas.width = 1000;

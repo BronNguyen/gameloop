@@ -3,6 +3,6 @@ import GamePlay from "./Scene/GamePlay";
 
 
 const app = new Game();
-app.
+app.start();
 const gamePlayScene = new GamePlay();
 gamePlayScene.conductGamePlay(gamePlayScene.state);
