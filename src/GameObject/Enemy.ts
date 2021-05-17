@@ -1,20 +1,11 @@
-import PhysicsBody from "../Util/PhysicBody";
-import Sprite from "../InferiorPhaser/Sprite";
-import { BirdAnimation } from "../Animation/BirdAnimation";
+import { BirdAnimation } from "../SuperiorPhaser/Animations";
+import GameObject from "./GameObject";
 
-export default class Enemy extends Sprite {
+export default class Enemy extends GameObject {
   fly = false;
-  body = new PhysicsBody(0);
-  protected image = new Image(30,30);
-
   constructor(image, w, h, x, y, fly) {
-    super(w, h,image, x, y);
-    this.width = w;
-    this.height = h;
-    this.x = x;
+    super(image, w, h, x, y);
     this.fly = fly;
-    this.y = y;
-    this.currentAnimation = BirdAnimation;
-    this.image = image;
+    if (this.fly) this.currentAnimation = BirdAnimation;
   }
 }

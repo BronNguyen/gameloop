@@ -1,26 +1,24 @@
-import Sprite from "../InferiorPhaser/Sprite";
-import State from "../InferiorPhaser/State";
 export default class Camera {
-  camWidth;
-  camHeight;
-  camPosX;
-  camPosY;
+  width;
+  height;
+  x;
+  y;
 
   constructor(w, h, x, y) {
-    this.camWidth = w;
-    this.camHeight = h;
-    this.camPosX = x;
-    this.camPosY = y;
+    this.width = w;
+    this.height = h;
+    this.x = x;
+    this.y = y;
   }
 
   public setPosition(x, y) {
-    this.camPosX = x;
-    this.camPosY = y;
+    this.x = x;
+    this.y = y;
   }
 
-  cameraFollow(gameObject: Sprite,  state: State){
-    const camX = gameObject.x +  state.gameWorld.canvas.width/2;
-    const camY =  state.gameWorld.canvas.height/2;
-    this.setPosition(camX,camY);
+  follow(gameObject) {
+    const camX = gameObject.x;
+    const camY = gameObject.y;
+    this.setPosition(camX, camY);
   }
 }

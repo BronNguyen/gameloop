@@ -1,4 +1,4 @@
-export default class ScoreHandler {
+class ScoreHandler {
   constructor() {}
 
   scoreToText(score: number):string {

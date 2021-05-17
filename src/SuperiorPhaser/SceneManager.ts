@@ -1,10 +1,11 @@
 import Scene from "./Scene";
+import Game from "./Game";
 
 export default class SceneManager {
     scenes: Scene[] = [];
     activeScene!: Scene;
 
-    constructor() {
+    constructor(game: Game) {
       this.create();
     };
 

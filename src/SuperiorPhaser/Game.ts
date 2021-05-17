@@ -13,7 +13,7 @@ export default class Game {
   constructor() {
     this.lastTime = window.performance.now();
     this.renderer = new Renderer(this);
-    this.sceneManager = new SceneManager();
+    this.sceneManager = new SceneManager(this);
     this.stepManager = new StepManager(this);
     this.inputManager = new InputManager();
   }

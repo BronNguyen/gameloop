@@ -1,9 +1,9 @@
 import SceneManager from  "./SceneManager";
 import Game from "./Game"
-import GameObject, { TextObject } from "GameObject/GameObject";
+import { TextObject , GameObject } from "GameObject";
 
 export default class Scene {
-    game!: Game
+    game: Game
     gameObjects: GameObject[] = [];
     textObjects: TextObject[] = [];
     name: string;
@@ -11,6 +11,7 @@ export default class Scene {
 
     constructor(sceneManager: SceneManager, name) {
       this.name = name;
+      this.game = sceneManager.game;
       sceneManager.add(this)
     }
     preload?(): void{}
