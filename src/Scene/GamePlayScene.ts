@@ -1,15 +1,23 @@
 import Scene from "../SuperiorPhaser/Scene";
-import { Camera, TextObject, Dino } from "../GameObject";
+import { Camera, TextObject, Dino, SpawningFactory, Enemy } from "../GameObject";
 import { scoreHandler } from "../Util/ScoreHandler";
+import SceneManager from "SuperiorPhaser/SceneManager";
 
 export default class GameplayScene extends Scene {
   dino?: Dino;
+  enemies: Enemy[] = [];
   camera?: Camera;
+  spawningFactory?: SpawningFactory
   score = 0;
   hiScore = 0;
   scoreText?: TextObject;
   hiScoreText?: TextObject;
   speed = 10;
+
+  constructor(sceneManager: SceneManager, name: string) {
+    super(sceneManager, name);
+    this.create();
+  }
 
   create() {
     this.gameObjects.push(
@@ -32,10 +40,10 @@ export default class GameplayScene extends Scene {
         scoreHandler.scoreToText(this.hiScore)
       ))
     );
-    // this.gameWorld = new GameWorld()
     this.camera = new Camera(100, 100, 0, 0);
     this.speed = 10;
     this.name = "GamePlayScene";
+    this.spawningFactory = new SpawningFactory();
     this.input = new DefineInput().createCursor;
     this.background = "./assets/ground.png";
     this.spawningFactory = new SpawningFactory();
@@ -44,8 +52,14 @@ export default class GameplayScene extends Scene {
     this.animationController = new AnimationController();
   }
 
-  update() {
-    this.dino.update();
+  update(time,delta) {
+    this.dino?.update(time,delta);
+    if(this.enemies.length < 1) {
+      const newEnemyProperty = this.spawningFactory?.getRamdomEnemy();
+      const newEnemyImg = new Image(30,30);
+      newEnemyImg.src = newEnemyProperty?.image;
+      const enemy = new Enemy(this, new Image(30,30),newEnemyProperty?.w,newEnemyProperty?.h,newEnemyProperty.)
+    }
     this.camera?.follow(this.dino);
     this.birds.forEach(bird.update());
   }
