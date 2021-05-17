@@ -4,10 +4,10 @@ import { scoreHandler } from "../Util/ScoreHandler";
 import SceneManager from "SuperiorPhaser/SceneManager";
 
 export default class GameplayScene extends Scene {
-  dino?: Dino;
+  dino: Dino;
   enemies: Enemy[] = [];
-  camera?: Camera;
-  spawningFactory?: SpawningFactory
+  camera: Camera;
+  spawningFactory: SpawningFactory
   score = 0;
   hiScore = 0;
   scoreText?: TextObject;
@@ -16,12 +16,15 @@ export default class GameplayScene extends Scene {
 
   constructor(sceneManager: SceneManager, name: string) {
     super(sceneManager, name);
+    this.dino = new Dino(this,new Image(30, 30), 100, 100, 0, 510)
+    this.camera = new Camera(100, 100, 0, 0);
+    this.spawningFactory = new SpawningFactory();
     this.create();
   }
 
   create() {
     this.gameObjects.push(
-      (this.dino = new Dino(this,new Image(30, 30), 100, 100, 0, 510))
+      (this.dino)
     );
     this.textObjects.push(
       new TextObject(
@@ -40,10 +43,9 @@ export default class GameplayScene extends Scene {
         scoreHandler.scoreToText(this.hiScore)
       ))
     );
-    this.camera = new Camera(100, 100, 0, 0);
     this.speed = 10;
+    this.camera.follow(this.dino);
     this.name = "GamePlayScene";
-    this.spawningFactory = new SpawningFactory();
     this.input = new DefineInput().createCursor;
     this.background = "./assets/ground.png";
     this.spawningFactory = new SpawningFactory();
@@ -55,9 +57,9 @@ export default class GameplayScene extends Scene {
   update(time,delta) {
     this.dino?.update(time,delta);
     if(this.enemies.length < 1) {
-      const newEnemyProperty = this.spawningFactory?.getRamdomEnemy();
+      const newEnemyProperty = this.spawningFactory.getRamdomEnemy();
       const newEnemyImg = new Image(30,30);
-      newEnemyImg.src = newEnemyProperty?.image;
+      newEnemyImg.src = newEnemyProperty.image;
       const enemy = new Enemy(this, new Image(30,30),newEnemyProperty?.w,newEnemyProperty?.h,newEnemyProperty.)
     }
     this.camera?.follow(this.dino);
