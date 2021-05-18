@@ -20,7 +20,13 @@ export default class Renderder {
     this.clear();
     const scene = this.game.sceneManager.activatedScene;
     scene.gameObjects.map((obj) => this.renderObject(obj));
+    scene.backgroundObjects.map(obj=> this.renderBackground(obj));
     scene.textObjects.map((text) => this.renderText(text));
+  }
+
+  renderBackground(obj: GameObject) {
+    const spriteImg = obj.getImage();
+    this.context.drawImage(spriteImg, obj.x, obj.y, obj.width, obj.height);
   }
 
   renderObject(object: GameObject) {

@@ -91,7 +91,6 @@ export default class Dino extends GameObject {
     if (!input.currentlyDownKey && !isJumping) {
       this.runAgain();
     }
-    //end input section
   }
 
   jump() {
@@ -138,7 +137,11 @@ export default class Dino extends GameObject {
     return crash;
   }
 
-  changeAnimation() {
+  roar() {
+    gameSound.reachSound.playSound();
+  }
+
+  changeAnimation(param?) {
     if (this.status == DinoStatus.Duck) {
       this.currentAnimation = dinoDown;
     } else if (this.status == DinoStatus.Jump) {
@@ -146,6 +149,9 @@ export default class Dino extends GameObject {
     } else if (this.status == DinoStatus.Die) {
       this.currentAnimation = dinoHurt;
     } else {
+      this.currentAnimation = dinoRun;
+    }
+    if(param == "start") {
       this.currentAnimation = dinoRun;
     }
   }

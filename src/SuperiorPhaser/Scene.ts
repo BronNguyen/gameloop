@@ -5,6 +5,7 @@ import { TextObject , GameObject } from "GameObject";
 export default class Scene {
     game: Game
     gameObjects: GameObject[] = [];
+    backgroundObjects: GameObject[] = [];
     textObjects: TextObject[] = [];
     name: string;
 
