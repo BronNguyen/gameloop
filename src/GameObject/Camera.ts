@@ -18,7 +18,7 @@ export default class Camera {
 
   follow(gameObject) {
     const camX = gameObject.x - 100;
-    const camY = 0
+    const camY = gameObject.y - 450;
     this.setPosition(camX, camY);
   }
 }

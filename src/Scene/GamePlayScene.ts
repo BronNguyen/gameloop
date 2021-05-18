@@ -25,15 +25,14 @@ export default class GameplayScene extends Scene {
     this.dino = new Dino(this, new Image(30, 30), 100, 100, 0, 510);
     this.camera = new Camera(100, 100, 0, 0);
     this.spawningFactory = new SpawningFactory();
-    this.create();
   }
 
   create() {
     this.gameObjects.push(this.dino);
     this.textObjects.push(
       new TextObject(
-        this.game.renderer.canvas.width / 2 + 30,
-        this.game.renderer.canvas.height / 2,
+        this.game.gameConfig.canvasWidth / 2 - 480,
+        this.game.gameConfig.canvasHeight / 2,
         "Press Space Bar to begin running"
       ),
       (this.scoreText = new TextObject(
@@ -64,8 +63,8 @@ export default class GameplayScene extends Scene {
       const newEnemyImg = new Image(30, 30);
       newEnemyImg.src = newEnemyProperty.image;
       const x =
-        this.game.renderer.canvas.width +
-        this.game.renderer.canvas.width * Math.random() +
+        this.game.gameConfig.canvasWidth +
+        this.game.gameConfig.canvasWidth * Math.random() +
         this.dino.x;
       let y;
       if (!newEnemyProperty.fly) {
@@ -75,7 +74,7 @@ export default class GameplayScene extends Scene {
       }
       const enemy = new Enemy(
         this,
-        new Image(30, 30),
+        newEnemyImg,
         newEnemyProperty?.w,
         newEnemyProperty?.h,
         x,
@@ -83,7 +82,17 @@ export default class GameplayScene extends Scene {
         newEnemyProperty.fly
       );
       this.enemies.push(enemy);
+      this.gameObjects.push(enemy);
+    }
+    else {
+      this.enemies.map(enemy => {
+        if(enemy.x < this.camera.x -100) {
+          this.enemies = [];
+          this.gameObjects = this.gameObjects.filter(obj => obj == this.dino);
+        }
+      })
     }
     this.camera.follow(this.dino);
+    this.gameObjects.map(obj=>obj.setRelativePosision(this.camera));
   }
 }

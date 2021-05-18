@@ -1,6 +1,6 @@
 import { TextObject, GameObject } from "../GameObject";
-import Scene from "./Scene";
 import Game from "./Game";
+import { GameConfig } from "../const/const";
 
 export default class Renderder {
   game: Game;
@@ -9,14 +9,15 @@ export default class Renderder {
     this.canvas.getContext("2d")
   );
 
-  constructor(game: Game) {
+  constructor(game: Game, gameconfig: GameConfig) {
     this.game = game;
-    this.canvas.width = 1000;
-    this.canvas.height = 580;
+    this.canvas.width = gameconfig.canvasWidth;
+    this.canvas.height = gameconfig.canvasHeight;
     this.context.font = "30px CustomFont";
   }
 
   render() {
+    this.clear();
     const scene = this.game.sceneManager.activeScene;
     scene.gameObjects.map((obj) => this.renderObject(obj));
     scene.textObjects.map((text) => this.renderText(text));
@@ -27,6 +28,7 @@ export default class Renderder {
     let objSy = 0;
     let objDw = 30; //scaling W
     let objDh = 30; //scaling H
+    const img = object.getImage();
     if (!object.currentAnimation) {
       objSx = 0;
       objDw = object.width;
@@ -37,13 +39,14 @@ export default class Renderder {
         object.currentAnimation.frameSet[object.currentAnimation.currentIndex];
       objDw = object.currentAnimation.frameWidth;
       objDh = object.currentAnimation.frameHeight;
+      img.src = object.currentAnimation.sprite;
     }
     this.context.drawImage(
-      object.getImage(),
+      img,
       objSx,
       objSy,
       objDw,
-      objDw,
+      objDh,
       object.relativePosX,
       object.relativePosY,
       objDw,
@@ -53,5 +56,9 @@ export default class Renderder {
 
   renderText(text: TextObject) {
     this.context.fillText(text.content, text.x, text.y);
+  }
+
+  clear() {
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 }

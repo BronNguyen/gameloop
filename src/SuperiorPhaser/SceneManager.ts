@@ -1,14 +1,18 @@
 import Scene from "./Scene";
 import Game from "./Game";
+import { GameConfig } from "../const/const";
 
 export default class SceneManager {
   scenes: Scene[] = [];
   activeScene!: Scene;
   game: Game;
 
-  constructor(game: Game) {
-    this.create();
+  constructor(game: Game, gameConfig: GameConfig) {
     this.game = game;
+    this.scenes = gameConfig.scenes.map(
+      (sceneType) => new sceneType(this, sceneType.name)
+    );
+    this.create();
   }
 
   add(scene) {
@@ -18,10 +22,9 @@ export default class SceneManager {
   switchScene(scene: Scene) {
     this.activeScene = scene;
   }
-//make the first scene activated
+
   create() {
-    if(!this.activeScene) this.switchScene(this.scenes[0]);
-    console.log(this.scenes);
+    if (!this.activeScene) this.switchScene(this.scenes[0]);
     this.activeScene.create();
   }
   update(time, delta) {

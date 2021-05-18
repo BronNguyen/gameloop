@@ -17,7 +17,7 @@ export default class MyAnimation {
 
   countFrame() {
     this.count++;
-    if (this.count == this.frameRate) {
+    if (this.count >= this.frameRate) {
       this.changeFrame();
     }
   }

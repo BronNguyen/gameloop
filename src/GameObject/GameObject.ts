@@ -26,10 +26,11 @@ export default class GameObject {
     return this.image;
   }
 
-  getRelativePosision(camera: Camera) {
+  setRelativePosision(camera: Camera) {
     this.relativePosX = this.x - camera.x;
     this.relativePosY = this.y - camera.y;
   }
 
-  update(time,delta) {}
+  update(time,delta) {
+  }
 }

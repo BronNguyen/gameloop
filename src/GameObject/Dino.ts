@@ -19,10 +19,10 @@ export default class Dino extends GameObject {
   status = DinoStatus.Run;
   takeOffTime = 0;
   gravity = 9.8;
-  velocity = new Vector2(0, 0);
+  velocity = new Vector2(10, 0);
 
-  constructor(scene,image, w, h, x, y) {
-    super(scene,image, w, h, x, y);
+  constructor(scene, image, w, h, x, y) {
+    super(scene, image, w, h, x, y);
     this.image.src = "./assets/dino-idle.png";
     this.currentAnimation = dinoIdle;
   }
@@ -41,33 +41,33 @@ export default class Dino extends GameObject {
   }
 
   consequentVelocity(gravity) {
-    if (!this.velocity) return new Vector2(0,0);
+    if (!this.velocity) return new Vector2(0, 0);
     const velX = this.velocity.x;
     const VelY = this.velocity.y - this.fallingVelocity(gravity);
     return new Vector2(velX, VelY);
   }
 
   update(time, delta): void {
+    // this.velocity.x =0 ;
     this.velocity.x += 0.01;
+
     if (
       1
-      // this.status == DinoStatus.Run todo???
+      // this.status == DinoStatus.Run todo?
     ) {
       this.status == DinoStatus.Jump
         ? (this.takeOffTime += delta)
         : (this.takeOffTime = 0);
     }
-    const isJumping = this.y < 510;//check again if bug
-    const isGrounded = this.y == 510;//check again if bug
+    const isJumping = this.y < 510; //check again if bug
+    const isGrounded = this.y == 510; //check again if bug
     this.changeAnimation();
     this.currentAnimation?.countFrame();
-    const newY = () => {
-      let y =  this.y - this.consequentVelocity(this.gravity).y * delta /1000;
-      if (isGrounded && this.status == DinoStatus.Duck) y = 510;
-      if (y > 480 && y != 510) y = 480;
-      return y;
-    }
-    this.setPosition(this.x, newY);
+    const newX = this.x + this.velocity.x;
+    let y = this.y - (this.consequentVelocity(this.gravity).y * delta) / 1000;
+    if (isGrounded && this.status == DinoStatus.Duck) y = 510;
+    if (y > 480 && y != 510) y = 480;
+    this.setPosition(newX, y);
     //input section
 
     //end input section
@@ -94,7 +94,7 @@ export default class Dino extends GameObject {
     return crash;
   }
 
-  changeAnimation() { 
+  changeAnimation() {
     if (this.status == DinoStatus.Duck) {
       this.currentAnimation = dinoDown;
     } else if (this.status == DinoStatus.Jump) {
@@ -106,4 +106,3 @@ export default class Dino extends GameObject {
     }
   }
 }
-
