@@ -1,6 +1,6 @@
 import SceneManager from "./SceneManager";
 import Renderer from "./Renderer";
-import StepManager from "./stepManager";
+import StepManager from "./StepManager";
 import InputManager from "./InputManager";
 import { GameConfig } from "../const/const";
 

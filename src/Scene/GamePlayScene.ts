@@ -25,11 +25,15 @@ export default class GameplayScene extends Scene {
   allowHighScore = false;
   background1: GameObject;
   background2: GameObject;
+  // gameOverButton: GameObject;
+  // gameOverText: GameObject;
   distance = 0;
 
   constructor(sceneManager: SceneManager, name: string) {
     super(sceneManager, name);
+
     this.dino = new Dino(this, new Image(30, 30), 100, 100, 0, 480);
+
     this.background1 = new GameObject(
       this,
       new Image(30, 30),
@@ -38,6 +42,7 @@ export default class GameplayScene extends Scene {
       this.distance,
       this.game.gameConfig.canvasHeight - 28
     );
+
     this.background2 = new GameObject(
       this,
       new Image(30, 30),
@@ -46,13 +51,16 @@ export default class GameplayScene extends Scene {
       this.game.gameConfig.canvasWidth + this.distance,
       this.game.gameConfig.canvasHeight - 28
     );
+
     this.camera = new Camera(100, 100, 0, 0);
     this.spawningFactory = new SpawningFactory();
+
     this.scoreText = new TextObject(
       820,
       50,
       scoreHandler.scoreToText(this.score)
     );
+
     this.hiScoreText = new TextObject(
       550,
       50,
@@ -66,10 +74,12 @@ export default class GameplayScene extends Scene {
     this.gameObjects.push(this.dino);
     this.backgroundObjects.push(this.background1, this.background2);
     this.camera.follow(this.dino);
-    this.name = "GamePlayScene";
+    this.game.renderer.canvas.click()
+
+    this.game.inputManager.addListener('keyup', this.handleTap())
   }
 
-  update(time, delta) {
+  update(time: number, delta: number) {
     if (this.gameStatus == GameStatus.IsRunning) {
       this.distance -= this.dino.velocity.x;
       if (Math.abs(this.distance) >= this.game.gameConfig.canvasWidth) {
@@ -165,6 +175,7 @@ export default class GameplayScene extends Scene {
       }
     } else if (this.gameStatus == GameStatus.GameOver) {
       this.allowHighScore = true;
+      this.backgroundObjects.push()
       if (this.game.inputManager.queue.pop() == " ") {
         this.gameStatus = GameStatus.IsRunning;
         this.enemies = [];

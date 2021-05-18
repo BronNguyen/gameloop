@@ -1,6 +1,7 @@
 export default class InputManager {
   queue: string[] = [];
   currentlyDownKey: string | undefined;
+  
 
   constructor() {}
 
@@ -17,8 +18,15 @@ export default class InputManager {
     }
   });
 
+  canvas = document.getElementById("myCanvas");
+  click = this.canvas?.addEventListener("click", (event)=>{
+    let x = event.pageX -
+  },false)
+
   handle() {
-    // console.log("hello i do nothin!");
+    this.queue.foreach(events => forEach(eventListener) {
+      listener()
+    }
   }
 
   registerKeyPress(input: string) {

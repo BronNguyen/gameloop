@@ -11,5 +11,8 @@ export default class Enemy extends GameObject {
 
   update(time, delta) {
     this.currentAnimation?.countFrame();
+    if(this.fly) {
+      this.x -= delta/16;
+    }
   }
 }
