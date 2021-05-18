@@ -7,6 +7,7 @@ import {
 } from "../Animation/Animations";
 import Vector2 from "../Util/Vector2";
 import GameObject from "./GameObject";
+import * as gameSound from "../Sound/Sound";
 
 export enum DinoStatus {
   Run = "run",
@@ -48,19 +49,14 @@ export default class Dino extends GameObject {
   }
 
   update(time, delta): void {
-    // this.velocity.x =0 ;
+    // todo: check if game is running in scene update, then do the dino update
     this.velocity.x += 0.01;
+    this.status == DinoStatus.Jump
+      ? (this.takeOffTime += delta)
+      : (this.takeOffTime = 0);
 
-    if (
-      1
-      // this.status == DinoStatus.Run todo?
-    ) {
-      this.status == DinoStatus.Jump
-        ? (this.takeOffTime += delta)
-        : (this.takeOffTime = 0);
-    }
-    const isJumping = this.y < 510; //check again if bug
-    const isGrounded = this.y == 510; //check again if bug
+    const isJumping = this.y < 480; //check again if bug
+    const isGrounded = this.y == 480; //check again if bug
     this.changeAnimation();
     this.currentAnimation?.countFrame();
     const newX = this.x + this.velocity.x;
@@ -68,12 +64,51 @@ export default class Dino extends GameObject {
     if (isGrounded && this.status == DinoStatus.Duck) y = 510;
     if (y > 480 && y != 510) y = 480;
     this.setPosition(newX, y);
+    // console.log(this.x, this.y,"dino");
     //input section
-
+    const input = this.currentScene.game.inputManager;
+    const inputKey = input.queue.pop();
+    if (inputKey) {
+      if (inputKey == "ArrowUp" || " ") {
+        this.jump();
+      }
+      if (inputKey == "ArrowDown") {
+        //check if dino is jumping, then make him fall down quickly, if he's grounded, check if his State is ducking, do nothin
+        // else if he is not ducking, make him duck like a duck
+        if (isJumping) {
+          this.takeOffTime *= 2;
+        }
+        if (isGrounded) {
+          if (this.status != DinoStatus.Duck) {
+            this.duck();
+          }
+        }
+      }
+    }
+    if (!input.currentlyDownKey && !isJumping) {
+      this.runAgain();
+    }
     //end input section
   }
 
-  public collisionWith(otherObj: GameObject) {
+  jump() {
+    if (this.status == DinoStatus.Jump) return;
+    gameSound.jumpSound.playSound();
+    this.status = DinoStatus.Jump;
+    this.velocity.y = 2200;
+  }
+
+  duck() {
+    this.status = DinoStatus.Duck;
+    this.y = 510;
+  }
+
+  runAgain() {
+    this.status = DinoStatus.Run;
+    this.y = 480;
+  }
+
+  collisionWith(otherObj: GameObject) {
     const myleft = this.x;
     const myright = this.x + this.width;
     const mytop = this.y;

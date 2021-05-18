@@ -18,7 +18,7 @@ export default class Renderder {
 
   render() {
     this.clear();
-    const scene = this.game.sceneManager.activeScene;
+    const scene = this.game.sceneManager.activatedScene;
     scene.gameObjects.map((obj) => this.renderObject(obj));
     scene.textObjects.map((text) => this.renderText(text));
   }
@@ -26,8 +26,8 @@ export default class Renderder {
   renderObject(object: GameObject) {
     let objSx = 0;
     let objSy = 0;
-    let objDw = 30; //scaling W
-    let objDh = 30; //scaling H
+    let objDw = 30;
+    let objDh = 30;
     const img = object.getImage();
     if (!object.currentAnimation) {
       objSx = 0;

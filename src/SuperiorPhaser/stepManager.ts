@@ -1,4 +1,3 @@
-import GameplayScene from "../Scene/GamePlayScene";
 import Game from "./Game";
 
 export default class StepManager {

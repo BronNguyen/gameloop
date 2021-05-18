@@ -4,7 +4,7 @@ import { GameConfig } from "../const/const";
 
 export default class SceneManager {
   scenes: Scene[] = [];
-  activeScene!: Scene;
+  activatedScene!: Scene;
   game: Game;
 
   constructor(game: Game, gameConfig: GameConfig) {
@@ -20,14 +20,15 @@ export default class SceneManager {
   }
 
   switchScene(scene: Scene) {
-    this.activeScene = scene;
+    this.activatedScene = scene;
   }
 
   create() {
-    if (!this.activeScene) this.switchScene(this.scenes[0]);
-    this.activeScene.create();
+    if (!this.activatedScene) this.switchScene(this.scenes[0]);
+    this.activatedScene.create();
   }
+
   update(time, delta) {
-    this.activeScene.update(time, delta);
+    this.activatedScene.update(time, delta);
   }
 }

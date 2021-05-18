@@ -28,7 +28,7 @@ export default class Game {
   loop = () => {
     const time = window.performance.now();
     const delta = time - this.lastTime;
-    // this.inputManager.handle();
+    this.inputManager.handle();
     this.stepManager.update(time, delta);
     this.renderer.render();
 
