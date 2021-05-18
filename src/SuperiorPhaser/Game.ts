@@ -31,7 +31,7 @@ export default class Game {
     this.inputManager.handle();
     this.stepManager.update(time, delta);
     this.renderer.render();
-
+    this.lastTime = time;
     requestAnimationFrame(this.loop);
   }
 }
