@@ -161,7 +161,7 @@ export default class GameplayScene extends Scene {
               "HI " + scoreHandler.scoreToText(this.hiScore)
             ))
           );
-        }, 2000);
+        }, 500);
       }
     } else if (this.gameStatus == GameStatus.GameOver) {
       this.allowHighScore = true;
