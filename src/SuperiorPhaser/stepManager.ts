@@ -6,7 +6,9 @@ export default class StepManager {
     constructor(game: Game) {
         this.game = game;
         // this.game.sceneManager.add(new PreloadScenee(game.sceneManager,"PreloadScene"))
-        this.game.sceneManager.add(new GameplayScene(game.sceneManager,"GamePlayScene"))
+        const newScene = new GameplayScene(game.sceneManager,"GamePlayScene");
+        console.log(newScene);
+        this.game.sceneManager.add(newScene)
         this.game.sceneManager.switchScene(this.game.sceneManager.scenes[0]);
     }
 

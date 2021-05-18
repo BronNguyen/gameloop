@@ -5,7 +5,7 @@ import {
   dinoJump as dinoHop,
   dinoRun,
 } from "../Animation/Animations";
-import Vector2 from "Util/Vector2";
+import Vector2 from "../Util/Vector2";
 import GameObject from "./GameObject";
 
 export enum DinoStatus {

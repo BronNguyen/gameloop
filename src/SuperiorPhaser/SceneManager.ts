@@ -18,8 +18,10 @@ export default class SceneManager {
   switchScene(scene: Scene) {
     this.activeScene = scene;
   }
-
+//make the first scene activated
   create() {
+    if(!this.activeScene) this.switchScene(this.scenes[0]);
+    console.log(this.scenes);
     this.activeScene.create();
   }
   update(time, delta) {

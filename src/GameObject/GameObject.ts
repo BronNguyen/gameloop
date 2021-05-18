@@ -30,4 +30,6 @@ export default class GameObject {
     this.relativePosX = this.x - camera.x;
     this.relativePosY = this.y - camera.y;
   }
+
+  update(time,delta) {}
 }

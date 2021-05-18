@@ -1,4 +1,4 @@
-import GameObject, { TextObject } from "../GameObject/GameObject";
+import { TextObject, GameObject } from "../GameObject";
 import Scene from "./Scene";
 import Game from "./Game";
 

@@ -1,5 +1,11 @@
 import Scene from "../SuperiorPhaser/Scene";
-import { Camera, TextObject, Dino, SpawningFactory, Enemy } from "../GameObject";
+import {
+  Camera,
+  TextObject,
+  Dino,
+  SpawningFactory,
+  Enemy,
+} from "../GameObject";
 import { scoreHandler } from "../Util/ScoreHandler";
 import SceneManager from "SuperiorPhaser/SceneManager";
 
@@ -7,7 +13,7 @@ export default class GameplayScene extends Scene {
   dino: Dino;
   enemies: Enemy[] = [];
   camera: Camera;
-  spawningFactory: SpawningFactory
+  spawningFactory: SpawningFactory;
   score = 0;
   hiScore = 0;
   scoreText?: TextObject;
@@ -16,16 +22,14 @@ export default class GameplayScene extends Scene {
 
   constructor(sceneManager: SceneManager, name: string) {
     super(sceneManager, name);
-    this.dino = new Dino(this,new Image(30, 30), 100, 100, 0, 510)
+    this.dino = new Dino(this, new Image(30, 30), 100, 100, 0, 510);
     this.camera = new Camera(100, 100, 0, 0);
     this.spawningFactory = new SpawningFactory();
     this.create();
   }
 
   create() {
-    this.gameObjects.push(
-      (this.dino)
-    );
+    this.gameObjects.push(this.dino);
     this.textObjects.push(
       new TextObject(
         this.game.renderer.canvas.width / 2 + 30,
@@ -46,23 +50,40 @@ export default class GameplayScene extends Scene {
     this.speed = 10;
     this.camera.follow(this.dino);
     this.name = "GamePlayScene";
-    this.input = new DefineInput().createCursor;
-    this.background = "./assets/ground.png";
-    this.spawningFactory = new SpawningFactory();
-    this.scoreHandler = new ScoreHandler();
-    this.eventHandler = new EventHandler();
-    this.animationController = new AnimationController();
+    // this.input = new DefineInput().createCursor;
+    // this.background = "./assets/ground.png";
+    // this.scoreHandler = new ScoreHandler();
+    // this.eventHandler = new EventHandler();
   }
 
-  update(time,delta) {
-    this.dino?.update(time,delta);
-    if(this.enemies.length < 1) {
+  update(time, delta) {
+    // this.dino.update(time,delta);
+    this.gameObjects.map(obj=>obj.update(time,delta))
+    if (this.enemies.length < 1) {
       const newEnemyProperty = this.spawningFactory.getRamdomEnemy();
-      const newEnemyImg = new Image(30,30);
+      const newEnemyImg = new Image(30, 30);
       newEnemyImg.src = newEnemyProperty.image;
-      const enemy = new Enemy(this, new Image(30,30),newEnemyProperty?.w,newEnemyProperty?.h,newEnemyProperty.)
+      const x =
+        this.game.renderer.canvas.width +
+        this.game.renderer.canvas.width * Math.random() +
+        this.dino.x;
+      let y;
+      if (!newEnemyProperty.fly) {
+        y = this.game.renderer.canvas.height - newEnemyProperty.h;
+      } else {
+        y = 433 * Math.random();
+      }
+      const enemy = new Enemy(
+        this,
+        new Image(30, 30),
+        newEnemyProperty?.w,
+        newEnemyProperty?.h,
+        x,
+        y,
+        newEnemyProperty.fly
+      );
+      this.enemies.push(enemy);
     }
-    this.camera?.follow(this.dino);
-    this.birds.forEach(bird.update());
+    this.camera.follow(this.dino);
   }
 }
