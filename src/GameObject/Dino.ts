@@ -9,6 +9,7 @@ import Vector2 from "../Util/Vector2";
 import GameObject from "./GameObject";
 import * as gameSound from "../Sound/Sound";
 import { DinoStatus } from "../const/DinoStatus";
+import { Key } from "../const/KeyInput";
 
 export default class Dino extends GameObject {
   status = DinoStatus.Run;
@@ -62,33 +63,24 @@ export default class Dino extends GameObject {
     this.setPosition(newX, y);
     //input section
     const input = this.currentScene.game.inputManager;
-    const inputKey = input.queue.pop();
-    switch (inputKey) {
-      case "ArrowUp": {
-        this.jump();
-        break;
-      }
-      case " ": {
-        this.jump();
-        break;
-      }
-      case "ArrowDown": {
-        //check if dino is jumping, then make him fall down quickly, if he's grounded, check if his State is ducking, do nothin
-        // else if he is not ducking, make him duck like a duck
-        if (isJumping) {
-          this.takeOffTime *= 2;
-        }
-        if (isGrounded) {
-          if (this.status != DinoStatus.Duck) {
-            this.duck();
-          }
-        }
-        break;
-      }
-      default:
-        break;
+    if(input.getKey(Key.UP)) {
+      this.jump()
     }
-    if (!input.currentlyDownKey && !isJumping) {
+    if(input.getKey(Key.SPACE)) {
+      this.jump()
+    }
+    if(input.getKey(Key.DOWN)) {
+      if (isJumping) {
+        this.takeOffTime *= 2;
+      }
+      if (isGrounded) {
+        if (this.status != DinoStatus.Duck) {
+          this.duck();
+        }
+      }
+    }
+
+    if (!(input.getKey(Key.UP) || input.getKey(Key.SPACE) || input.getKey(Key.DOWN)) && !isJumping) {
       this.runAgain();
     }
   }

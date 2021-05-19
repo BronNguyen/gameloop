@@ -10,6 +10,7 @@ import {
 import { scoreHandler } from "../Util/ScoreHandler";
 import SceneManager from "SuperiorPhaser/SceneManager";
 import { GameStatus } from "../const/GameStatus";
+import { Key } from "../const/KeyInput";
 
 export default class GameplayScene extends Scene {
   dino: Dino;
@@ -74,9 +75,7 @@ export default class GameplayScene extends Scene {
     this.gameObjects.push(this.dino);
     this.backgroundObjects.push(this.background1, this.background2);
     this.camera.follow(this.dino);
-    this.game.renderer.canvas.click()
-
-    this.game.inputManager.addListener('keyup', this.handleTap())
+    // this.game.renderer.canvas.click()
   }
 
   update(time: number, delta: number) {
@@ -152,7 +151,7 @@ export default class GameplayScene extends Scene {
           "Press Space Bar to begin running"
         ))
       );
-      if (this.game.inputManager.queue.pop() == " ") {
+      if (this.game.inputManager.getKey(Key.SPACE)) {
         //start game
         this.gameStatus = GameStatus.Start;
         this.dino.changeAnimation("start");
@@ -176,7 +175,7 @@ export default class GameplayScene extends Scene {
     } else if (this.gameStatus == GameStatus.GameOver) {
       this.allowHighScore = true;
       this.backgroundObjects.push()
-      if (this.game.inputManager.queue.pop() == " ") {
+      if (this.game.inputManager.getKey(Key.SPACE)) {
         this.gameStatus = GameStatus.IsRunning;
         this.enemies = [];
         this.gameObjects = this.gameObjects.filter((obj) => obj == this.dino);
