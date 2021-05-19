@@ -31,12 +31,19 @@ export default class InputManager {
     "mouseup",
     (event) => {
       event.preventDefault();
-      this.resetMouseEvent()
+      this.resetMouseEvent();
     },
     true
   );
+
   resetMouseEvent() {
     this.keyEvent.mouseClicked = {};
+  }
+
+  getClick() {
+    if (Object.keys(this.keyEvent.mouseClicked).length > 0) {
+      return true;
+    }
   }
 
   getKey(input?: string) {
@@ -44,8 +51,6 @@ export default class InputManager {
       if (this.keyEvent.currentlyDownKey[input] == input) {
         return true;
       }
-      return false;
-    } else {
       return false;
     }
   }

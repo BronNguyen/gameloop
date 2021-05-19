@@ -34,73 +34,75 @@ export default class Dino extends GameObject {
   update(time, delta): void {
     this.changeAnimation();
     this.currentAnimation?.countFrame();
-    const isJumping = this.y < 480;
-    const isGrounded = this.y == 480;
-    this.setPosition(delta, isJumping, isGrounded);
-    this.handleInput(isJumping,isGrounded);
+    this.y < 480
+      ? (this.status = DinoStatus.Jump)
+      : this.y == 510
+      ? (this.status = DinoStatus.Duck)
+      : (this.status = DinoStatus.Run);
+    this.setPosition(delta);
+    this.handleInput();
   }
 
-  handleInput(isJumping, isGrounded) {
+  handleInput() {
     const input = this.currentScene.game.inputManager;
     if (input.getKey(Key.UP)) {
       this.jump();
+      return;
     }
     if (input.getKey(Key.SPACE)) {
       this.jump();
+      return;
     }
     if (input.getKey(Key.DOWN)) {
-      if (isJumping) {
-        this.takeOffTime *= 2;
-      }
-      if (isGrounded) {
-        if (this.status != DinoStatus.Duck) {
-          this.duck();
-        }
-      }
+      this.duck();
+      return;
     }
-
-    if (
-      !(
-        input.getKey(Key.UP) ||
-        input.getKey(Key.SPACE) ||
-        input.getKey(Key.DOWN)
-      ) &&
-      !isJumping
-    ) {
+    //  this condition code created in order to make the dino duck permanently when hold pressing DOWN button
+    // run back when released DOWN button
+    input.keyEvent.mouseClicked == {} ? console.log("key") : true;
+    if (!(input.getKey() || input.getClick()) && this.status != DinoStatus.Jump) {
       this.runAgain();
+      return;
     }
   }
 
-  setPosition(delta, isJumping, isGrounded) {
+  setPosition(delta) {
     this.velocity.x += 0.01;
     if (this.status == DinoStatus.Jump) {
       this.takeOffTime += delta;
     } else {
       this.takeOffTime = 0;
-      this.velocity.y = 0;
     }
+    //concern when to update velocity y = 0????
     const newX = this.x + this.velocity.x;
     let y = this.y - (this.consequentVelocity(this.gravity).y * delta) / 1000;
-    if (isGrounded && this.status == DinoStatus.Duck) y = 510;
+    //check if the dino's position is underground after updating y, so make it on ground;
     if (y > 480 && y != 510) y = 480;
     this.x = newX;
     this.y = y;
+    //after set new Y, if y == 480, set velocity y = 0 to disable the jump
+    if (this.takeOffTime == 0) this.velocity.y = 0;
   }
 
   jump() {
     if (this.status == DinoStatus.Jump) return;
     gameSound.jumpSound.playSound();
-    this.status = DinoStatus.Jump;
+    // this.status = DinoStatus.Jump;
     this.velocity.y = 2500;
   }
 
   duck() {
-    this.status = DinoStatus.Duck;
-    this.y = 510;
+    if (this.status == DinoStatus.Jump) {
+      this.takeOffTime *= 2;
+    }
+    if (this.y == 480) {
+      if (this.status != DinoStatus.Duck) {
+        this.y = 510;
+      }
+    }
   }
 
   runAgain() {
-    this.status = DinoStatus.Run;
     this.y = 480;
   }
 
