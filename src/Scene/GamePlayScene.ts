@@ -6,6 +6,7 @@ import {
   SpawningFactory,
   Enemy,
   GameObject,
+  GameButton,
 } from "../GameObject";
 import { scoreHandler } from "../Util/ScoreHandler";
 import SceneManager from "SuperiorPhaser/SceneManager";
@@ -26,7 +27,9 @@ export default class GameplayScene extends Scene {
   allowHighScore = false;
   background1: GameObject;
   background2: GameObject;
-  gameOverButton: GameObject;
+  gameOverButton: GameButton;
+  upButton: GameButton;
+  downButton: GameButton;
   gameOverText: GameObject;
   distance = 0;
 
@@ -62,13 +65,24 @@ export default class GameplayScene extends Scene {
       this.game.gameConfig.canvasHeight / 2 - 80
     );
 
-    this.gameOverButton = new GameObject(
+    this.gameOverButton = new GameButton(
       this,
       new Image(30, 30),
       144,
       128,
       this.game.gameConfig.canvasWidth / 2 - 72,
       this.game.gameConfig.canvasHeight / 2 - 20
+    );
+
+    this.upButton = new GameButton(this, new Image(30, 30), 100, 100, 100, 100);
+
+    this.downButton = new GameButton(
+      this,
+      new Image(30, 30),
+      100,
+      100,
+      this.game.gameConfig.canvasWidth - 200,
+      100
     );
 
     this.camera = new Camera(100, 100, 0, 0);
@@ -92,8 +106,11 @@ export default class GameplayScene extends Scene {
     this.background2.getImage().src = "./assets/ground.png";
     this.gameOverText.getImage().src = "./assets/game-over.png";
     this.gameOverButton.getImage().src = "./assets/restart.png";
+    this.upButton.getImage().src = "./assets/up-arrow.png";
+    this.downButton.getImage().src = "./assets/down-arrow.png";
     this.gameObjects.push(this.dino);
     this.backgroundObjects.push(this.background1, this.background2);
+    this.gameButtonObjects.push(this.upButton, this.downButton);
     this.camera.follow(this.dino);
     // this.game.renderer.canvas.click()
   }
@@ -104,7 +121,7 @@ export default class GameplayScene extends Scene {
     } else if (this.gameStatus == GameStatus.Ready) {
       this.handleGameReady();
     } else if (this.gameStatus == GameStatus.GameOver) {
-      this.handleGameOver();
+      this.handleGameOver(time, delta);
     } else {
       this.dino.currentAnimation?.countFrame();
     }
@@ -126,6 +143,16 @@ export default class GameplayScene extends Scene {
     this.camera.follow(this.dino);
     this.gameObjects.map((obj) => obj.setRelativePosision(this.camera));
     this.raisingScore();
+    this.handleButton();
+  }
+
+  handleButton() {
+    if(this.upButton.beClicked()){
+      this.dino.jump();
+    }
+    if(this.downButton.beClicked()) {
+      this.dino.duck();
+    }
   }
 
   raisingScore() {
@@ -141,8 +168,7 @@ export default class GameplayScene extends Scene {
     if (this.hiScore < this.score) {
       this.hiScore = this.score;
       this.allowHighScore = true;
-    }
-    else{
+    } else {
       this.allowHighScore = false;
     }
 
@@ -224,20 +250,36 @@ export default class GameplayScene extends Scene {
     }
   }
 
-  handleGameOver() {
+  handleGameOver(time, delta) {
+    this.gameButtonObjects.map((btn) => btn.update(time, delta));
     if (!this.renderChecking(this.hiScoreText, this.textObjects))
       this.textObjects.push(this.hiScoreText);
 
     if (!this.renderChecking(this.gameOverText, this.backgroundObjects))
       this.backgroundObjects.push(this.gameOverText);
 
-    if (!this.renderChecking(this.gameOverButton, this.backgroundObjects))
-      this.backgroundObjects.push(this.gameOverButton);
+    this.gameButtonObjects.pop();
+    this.gameButtonObjects.pop();
 
-    if (this.game.inputManager.getKey(Key.SPACE)) {
+    if (!this.renderChecking(this.gameOverButton, this.gameButtonObjects))
+      this.gameButtonObjects.push(this.gameOverButton);
+
+    if (
+      this.game.inputManager.getKey(Key.SPACE) ||
+      this.gameOverButton.beClicked()
+    ) {
+      //remove the gameobject from rendering group, so they wont be rendered
       this.backgroundObjects.pop();
-      this.backgroundObjects.pop();
+      this.gameButtonObjects.pop();
       this.textObjects.pop();
+
+      if (!this.renderChecking(this.upButton, this.gameButtonObjects))
+        this.gameButtonObjects.push(this.upButton);
+
+      if (!this.renderChecking(this.downButton, this.gameButtonObjects))
+        this.gameButtonObjects.push(this.downButton);
+
+      //set the game to inital state
       this.gameStatus = GameStatus.IsRunning;
       this.enemies = [];
       this.gameObjects = this.gameObjects.filter((obj) => obj == this.dino);
@@ -251,6 +293,7 @@ export default class GameplayScene extends Scene {
   }
 
   renderChecking(renderObject, renderObjectArray) {
+    //check if the object is already rendered or not
     if (renderObjectArray.filter((obj) => obj == renderObject).length > 0)
       return true;
     return false;

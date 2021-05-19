@@ -22,6 +22,7 @@ export default class Renderder {
     scene.gameObjects.map((obj) => this.renderObject(obj));
     scene.backgroundObjects.map(obj=> this.renderBackground(obj));
     scene.textObjects.map((text) => this.renderText(text));
+    scene.gameButtonObjects.map(button=> this.renderBackground(button));
   }
 
   renderBackground(obj: GameObject) {

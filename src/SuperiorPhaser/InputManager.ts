@@ -3,6 +3,7 @@ export default class InputManager {
     keyUp: {},
     keyDown: {},
     currentlyDownKey: {},
+    mouseClicked: {},
   };
 
   constructor() {
@@ -10,6 +11,7 @@ export default class InputManager {
       keyUp: {},
       keyDown: {},
       currentlyDownKey: {},
+      mouseClicked: {},
     };
   }
 
@@ -20,9 +22,22 @@ export default class InputManager {
       event.preventDefault();
       let x = event.offsetX;
       let y = event.offsetY;
+      this.keyEvent.mouseClicked = { x: x, y: y };
     },
     true
   );
+
+  releaseClick = this.canvas?.addEventListener(
+    "mouseup",
+    (event) => {
+      event.preventDefault();
+      this.resetMouseEvent()
+    },
+    true
+  );
+  resetMouseEvent() {
+    this.keyEvent.mouseClicked = {};
+  }
 
   getKey(input?: string) {
     if (input) {
