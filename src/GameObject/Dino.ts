@@ -23,53 +23,32 @@ export default class Dino extends GameObject {
     this.currentAnimation = dinoIdle;
   }
 
-  public setPosition(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-
-  public setVelocity(x, y) {
-    this.velocity = new Vector2(x, y);
-  }
-
-  fallingVelocity(gravity) {
-    return this.takeOffTime * gravity;
-  }
-
   consequentVelocity(gravity) {
+    const fallingVelocity = this.takeOffTime * gravity;
     if (!this.velocity) return new Vector2(0, 0);
     const velX = this.velocity.x;
-    const VelY = this.velocity.y - this.fallingVelocity(gravity);
+    const VelY = this.velocity.y - fallingVelocity;
     return new Vector2(velX, VelY);
   }
 
   update(time, delta): void {
-    // todo: check if game is running in scene update, then do the dino update
-    this.velocity.x += 0.01;
-    if(this.status == DinoStatus.Jump) {
-      this.takeOffTime += delta;
-    } else {
-      this.takeOffTime = 0;
-      this.velocity.y = 0;
-    }
-    const isJumping = this.y < 480; //check again if bug
-    const isGrounded = this.y == 480; //check again if bug
     this.changeAnimation();
     this.currentAnimation?.countFrame();
-    const newX = this.x + this.velocity.x;
-    let y = this.y - (this.consequentVelocity(this.gravity).y * delta) / 1000;
-    if (isGrounded && this.status == DinoStatus.Duck) y = 510;
-    if (y > 480 && y != 510) y = 480;
-    this.setPosition(newX, y);
-    //input section
+    const isJumping = this.y < 480;
+    const isGrounded = this.y == 480;
+    this.setPosition(delta, isJumping, isGrounded);
+    this.handleInput(isJumping,isGrounded);
+  }
+
+  handleInput(isJumping, isGrounded) {
     const input = this.currentScene.game.inputManager;
-    if(input.getKey(Key.UP)) {
-      this.jump()
+    if (input.getKey(Key.UP)) {
+      this.jump();
     }
-    if(input.getKey(Key.SPACE)) {
-      this.jump()
+    if (input.getKey(Key.SPACE)) {
+      this.jump();
     }
-    if(input.getKey(Key.DOWN)) {
+    if (input.getKey(Key.DOWN)) {
       if (isJumping) {
         this.takeOffTime *= 2;
       }
@@ -80,16 +59,39 @@ export default class Dino extends GameObject {
       }
     }
 
-    if (!(input.getKey(Key.UP) || input.getKey(Key.SPACE) || input.getKey(Key.DOWN)) && !isJumping) {
+    if (
+      !(
+        input.getKey(Key.UP) ||
+        input.getKey(Key.SPACE) ||
+        input.getKey(Key.DOWN)
+      ) &&
+      !isJumping
+    ) {
       this.runAgain();
     }
+  }
+
+  setPosition(delta, isJumping, isGrounded) {
+    this.velocity.x += 0.01;
+    if (this.status == DinoStatus.Jump) {
+      this.takeOffTime += delta;
+    } else {
+      this.takeOffTime = 0;
+      this.velocity.y = 0;
+    }
+    const newX = this.x + this.velocity.x;
+    let y = this.y - (this.consequentVelocity(this.gravity).y * delta) / 1000;
+    if (isGrounded && this.status == DinoStatus.Duck) y = 510;
+    if (y > 480 && y != 510) y = 480;
+    this.x = newX;
+    this.y = y;
   }
 
   jump() {
     if (this.status == DinoStatus.Jump) return;
     gameSound.jumpSound.playSound();
     this.status = DinoStatus.Jump;
-    this.velocity.y = 2200;
+    this.velocity.y = 2500;
   }
 
   duck() {
@@ -143,7 +145,7 @@ export default class Dino extends GameObject {
     } else {
       this.currentAnimation = dinoRun;
     }
-    if(param == "start") {
+    if (param == "start") {
       this.currentAnimation = dinoRun;
     }
   }
