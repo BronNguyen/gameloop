@@ -1,71 +1,95 @@
+import { Key } from "../const/KeyInput";
+
 export default class InputManager {
-  keyEvent = {
-    keyUp: {},
-    keyDown: {},
-    currentlyDownKey: {},
-    mouseClicked: {},
-  };
+  keyboard: EventTarget;
+  eventQueue: KeyboardEvent[];
+  canvas: HTMLCanvasElement;
+
+  mouseClicked: {};
+  arrowUp_Down: Event;
+  arrowDown_Down: Event;
+  Space_Down: Event;
+  arrowUp_Up: Event;
+  Space_Up: Event;
+  arrowDown_Up: Event;
 
   constructor() {
-    this.keyEvent = {
-      keyUp: {},
-      keyDown: {},
-      currentlyDownKey: {},
-      mouseClicked: {},
-    };
+    this.mouseClicked = {};
+    this.eventQueue = [];
+
+    this.canvas = <HTMLCanvasElement>document.getElementById("myCanvas");
+
+    this.arrowUp_Down = new Event(Key.UP);
+    this.arrowDown_Down = new Event(Key.DOWN);
+    this.Space_Down = new Event(Key.SPACE);
+
+    this.arrowUp_Up = new Event("Up-up");
+    this.arrowDown_Up = new Event("Down-up");
+    this.Space_Up = new Event("Space-up");
+
+    this.keyboard = new EventTarget();
+
+    window.addEventListener("keydown", (e) => {
+      this.eventQueue.push(e);
+    });
+
+    window.addEventListener("keyup", (e) => {
+      this.eventQueue.push(e);
+    });
+
+    this.canvas.addEventListener(
+      "mousedown",
+      (event) => {
+        event.preventDefault();
+        let x = event.offsetX;
+        let y = event.offsetY;
+        this.mouseClicked = { x: x, y: y };
+      },
+      true
+    );
+
+    this.canvas.addEventListener(
+      "mouseup",
+      (event) => {
+        event.preventDefault();
+        this.resetMouseEvent();
+      },
+      true
+    );
   }
 
-  canvas = document.getElementById("myCanvas");
-  click = this.canvas?.addEventListener(
-    "mousedown",
-    (event) => {
-      event.preventDefault();
-      let x = event.offsetX;
-      let y = event.offsetY;
-      this.keyEvent.mouseClicked = { x: x, y: y };
-    },
-    true
-  );
-
-  releaseClick = this.canvas?.addEventListener(
-    "mouseup",
-    (event) => {
-      event.preventDefault();
-      this.resetMouseEvent();
-    },
-    true
-  );
-
   resetMouseEvent() {
-    this.keyEvent.mouseClicked = {};
+    this.mouseClicked = {};
   }
 
   getClick() {
-    if (Object.keys(this.keyEvent.mouseClicked).length > 0) {
+    if (Object.keys(this.mouseClicked).length > 0) {
       return true;
     }
-  }
-
-  getKey(input?: string) {
-    if (input) {
-      if (this.keyEvent.currentlyDownKey[input] == input) {
-        return true;
-      }
-      return false;
-    }
+    return false;
   }
 
   handle() {
-    window.addEventListener("keydown", (event) => {
-      if (!this.getKey(event.key)) {
-        this.keyEvent.keyDown[event.key] = event.key;
-        this.keyEvent.currentlyDownKey[event.key] = event.key;
+    this.eventQueue.forEach((e) => {
+      if (e.key == Key.UP && e.type == "keyup") {
+        this.keyboard.dispatchEvent(this.arrowUp_Up);
+      }
+      if (e.key == Key.DOWN && e.type == "keyup") {
+        this.keyboard.dispatchEvent(this.arrowDown_Up);
+      }
+      if (e.key == Key.SPACE && e.type == "keyup") {
+        this.keyboard.dispatchEvent(this.Space_Up);
+      }
+      if (e.key == Key.UP && e.type == "keydown") {
+        this.keyboard.dispatchEvent(this.arrowUp_Down);
+      }
+      if (e.key == Key.DOWN && e.type == "keydown") {
+        this.keyboard.dispatchEvent(this.arrowDown_Down);
+      }
+      if (e.key == Key.SPACE && e.type == "keydown") {
+        this.keyboard.dispatchEvent(this.Space_Down);
       }
     });
-
-    window.addEventListener("keyup", (event) => {
-      this.keyEvent.keyUp[event.key] = event.key;
-      delete this.keyEvent.currentlyDownKey[event.key];
-    });
+    this.eventQueue = [];
   }
 }

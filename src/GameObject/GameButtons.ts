@@ -19,7 +19,7 @@ export default class GameButton extends GameObject {
     const mytop = this.y;
     const mybottom = this.y + this.height;
     const mouse = <{ x: number; y: number }>(
-      this.currentScene.game.inputManager.keyEvent.mouseClicked
+      this.currentScene.game.inputManager.mouseClicked
     );
     if (mouse.y == undefined) {
       return false;

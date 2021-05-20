@@ -13,7 +13,7 @@ import SceneManager from "SuperiorPhaser/SceneManager";
 import { GameStatus } from "../const/GameStatus";
 import { Key } from "../const/KeyInput";
 
-export default class GameplayScene extends Scene {
+export default class GameScene extends Scene {
   dino: Dino;
   enemies: Enemy[] = [];
   camera: Camera;
@@ -110,9 +110,9 @@ export default class GameplayScene extends Scene {
     this.downButton.getImage().src = "./assets/down-arrow.png";
     this.gameObjects.push(this.dino);
     this.backgroundObjects.push(this.background1, this.background2);
-    this.gameButtonObjects.push(this.upButton, this.downButton);
+    // this.gameButtonObjects.push(this.upButton, this.downButton);
     this.camera.follow(this.dino);
-    // this.game.renderer.canvas.click()
+    this.dino.create();
   }
 
   update(time: number, delta: number) {
@@ -138,7 +138,7 @@ export default class GameplayScene extends Scene {
     if (this.enemies.length < 1) {
       this.initiateEnemies();
     } else {
-      this.destroyEnemy();
+      this.enemyBehavior();
     }
     this.camera.follow(this.dino);
     this.gameObjects.map((obj) => obj.setRelativePosision(this.camera));
@@ -147,11 +147,17 @@ export default class GameplayScene extends Scene {
   }
 
   handleButton() {
-    if(this.upButton.beClicked()){
-      this.dino.jump();
+    if (this.upButton.beClicked()) {
+      this.game.inputManager.keyboard.dispatchEvent(new Event(Key.SPACE));
+      // this.dino.jump();
     }
-    if(this.downButton.beClicked()) {
-      this.dino.duck();
+    if (this.downButton.beClicked()) {
+      this.game.inputManager.keyboard.dispatchEvent(new Event(Key.DOWN));
+      if (!this.game.inputManager.getClick()) {
+        this.game.inputManager.keyboard.dispatchEvent(new Event("Down-up"));
+      }
+      // this.game.inputManager.keyboard.dispatchEvent(new Event("Down-up"));
+      // this.dino.duck();
     }
   }
 
@@ -174,7 +180,7 @@ export default class GameplayScene extends Scene {
 
     if (
       this.allowHighScore &&
-      !this.renderChecking(this.hiScoreText, this.textObjects)
+      !this.inArray(this.hiScoreText, this.textObjects)
     )
       this.textObjects.push(this.hiScoreText);
   }
@@ -206,7 +212,7 @@ export default class GameplayScene extends Scene {
     this.gameObjects.push(enemy);
   }
 
-  destroyEnemy() {
+  enemyBehavior() {
     this.enemies.map((enemy) => {
       if (enemy.x < this.camera.x - 100) {
         this.enemies = [];
@@ -228,71 +234,76 @@ export default class GameplayScene extends Scene {
         "Press Space Bar to begin running"
       ))
     );
-    if (this.game.inputManager.getKey(Key.SPACE)) {
-      this.gameStatus = GameStatus.Start;
-      this.dino.changeAnimation("start");
-      window.setTimeout(() => {
-        this.gameStatus = GameStatus.IsRunning;
-        this.textObjects = [];
-        this.textObjects.push(
-          (this.scoreText = new TextObject(
-            820,
-            50,
-            scoreHandler.scoreToText(this.score)
-          )),
-          (this.hiScoreText = new TextObject(
-            550,
-            50,
-            "HI " + scoreHandler.scoreToText(this.hiScore)
-          ))
-        );
-      }, 500);
-    }
+    this.game.inputManager.keyboard.addEventListener(Key.SPACE, () => {
+      if (this.gameStatus == GameStatus.Ready) {
+        this.gameStatus = GameStatus.Start;
+        this.dino.changeAnimation("start");
+        window.setTimeout(() => {
+          this.gameStatus = GameStatus.IsRunning;
+          this.textObjects = [];
+          this.textObjects.push(
+            (this.scoreText = new TextObject(
+              820,
+              50,
+              scoreHandler.scoreToText(this.score)
+            )),
+            (this.hiScoreText = new TextObject(
+              550,
+              50,
+              "HI " + scoreHandler.scoreToText(this.hiScore)
+            ))
+          );
+        }, 500);
+      }
+    });
   }
 
   handleGameOver(time, delta) {
     this.gameButtonObjects.map((btn) => btn.update(time, delta));
-    if (!this.renderChecking(this.hiScoreText, this.textObjects))
+    if (!this.inArray(this.hiScoreText, this.textObjects))
       this.textObjects.push(this.hiScoreText);
 
-    if (!this.renderChecking(this.gameOverText, this.backgroundObjects))
+    if (!this.inArray(this.gameOverText, this.backgroundObjects))
       this.backgroundObjects.push(this.gameOverText);
 
-    this.gameButtonObjects.pop();
-    this.gameButtonObjects.pop();
+    // this.gameButtonObjects.pop();
+    // this.gameButtonObjects.pop();
 
-    if (!this.renderChecking(this.gameOverButton, this.gameButtonObjects))
+    if (!this.inArray(this.gameOverButton, this.gameButtonObjects))
       this.gameButtonObjects.push(this.gameOverButton);
 
-    if (
-      this.game.inputManager.getKey(Key.SPACE) ||
-      this.gameOverButton.beClicked()
-    ) {
-      //remove the gameobject from rendering group, so they wont be rendered
-      this.backgroundObjects.pop();
-      this.gameButtonObjects.pop();
-      this.textObjects.pop();
-
-      if (!this.renderChecking(this.upButton, this.gameButtonObjects))
-        this.gameButtonObjects.push(this.upButton);
-
-      if (!this.renderChecking(this.downButton, this.gameButtonObjects))
-        this.gameButtonObjects.push(this.downButton);
-
+    if (this.gameOverButton.beClicked()) {
       //set the game to inital state
-      this.gameStatus = GameStatus.IsRunning;
-      this.enemies = [];
-      this.gameObjects = this.gameObjects.filter((obj) => obj == this.dino);
-      this.score = 0;
-      this.dino.velocity.x = 10;
-      this.allowHighScore = false;
-      this.dino.x = 0;
-      this.dino.y = 480;
-      this.dino.velocity.y = 0;
+      this.restartGame();
     }
   }
 
-  renderChecking(renderObject, renderObjectArray) {
+  private restartGame() {
+    if (this.gameStatus == GameStatus.IsRunning) return;
+    this.gameStatus = GameStatus.IsRunning;
+
+    //remove the gameobject from rendering group, so they wont be rendered twice
+    this.backgroundObjects.pop();
+    this.gameButtonObjects.pop();
+    this.textObjects.pop();
+
+    // if (!this.inArray(this.upButton, this.gameButtonObjects))
+    //   this.gameButtonObjects.push(this.upButton);
+
+    // if (!this.inArray(this.downButton, this.gameButtonObjects))
+    //   this.gameButtonObjects.push(this.downButton);
+
+    this.enemies = [];
+    this.gameObjects = this.gameObjects.filter((obj) => obj == this.dino);
+    this.score = 0;
+    this.dino.velocity.x = 10;
+    this.allowHighScore = false;
+    this.dino.x = 0;
+    this.dino.y = 480;
+    this.dino.velocity.y = 0;
+  }
+
+  inArray(renderObject, renderObjectArray) {
     //check if the object is already rendered or not
     if (renderObjectArray.filter((obj) => obj == renderObject).length > 0)
       return true;

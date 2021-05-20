@@ -2,7 +2,7 @@ import SceneManager from "./SceneManager";
 import Renderer from "./Renderer";
 import StepManager from "./StepManager";
 import InputManager from "./InputManager";
-import { GameConfig } from "../const/const";
+import { GameConfig } from "../const/GameConfig";
 
 export default class Game {
   renderer: Renderer;
@@ -15,10 +15,10 @@ export default class Game {
   constructor(gameConfig:GameConfig) {
     this.gameConfig = gameConfig;
     this.lastTime = window.performance.now();
+    this.inputManager = new InputManager();
     this.renderer = new Renderer(this,gameConfig);
     this.sceneManager = new SceneManager(this,gameConfig);
     this.stepManager = new StepManager(this);
-    this.inputManager = new InputManager();
   }
 
   start() {

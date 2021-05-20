@@ -1,12 +1,12 @@
-import GameplayScene from "./Scene/GamePlayScene";
-import { GameConfig } from "./const/const";
+import GameScene from "./Scene/GameScene";
+import { GameConfig } from "./const/GameConfig";
 import Game from "./SuperiorPhaser/Game";
 
 
 const gameConfig:GameConfig = {
     canvasWidth: 1000,
     canvasHeight: 580,
-    scenes: [GameplayScene],
+    scenes: [GameScene],
 }
 const app = new Game(gameConfig);
 app.start();

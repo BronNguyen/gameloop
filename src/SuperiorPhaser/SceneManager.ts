@@ -1,6 +1,6 @@
 import Scene from "./Scene";
 import Game from "./Game";
-import { GameConfig } from "../const/const";
+import { GameConfig } from "../const/GameConfig";
 
 export default class SceneManager {
   scenes: Scene[] = [];
