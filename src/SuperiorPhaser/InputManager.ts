@@ -1,4 +1,10 @@
+import { Key } from "../const/KeyInput";
+
 export default class InputManager {
+  keyboard: EventTarget;
+  listeners: EventListener[];
+  canvas: HTMLCanvasElement;
+
   keyEvent = {
     keyUp: {},
     keyDown: {},
@@ -13,28 +19,60 @@ export default class InputManager {
       currentlyDownKey: {},
       mouseClicked: {},
     };
+    this.canvas = <HTMLCanvasElement>document.getElementById("myCanvas");
+
+    this.listeners = <EventListener[]>[];
+
+    const keyUpEvent = new Event(Key.UP);
+    const keyDownEvent = new Event(Key.DOWN);
+    const keySpaceEvent = new Event(Key.SPACE);
+
+    this.keyboard = new EventTarget();
+
+
+    this.keyboard.addEventListener(Key.DOWN, handleKeyDown);
+
+    window.addEventListener("keydown", (e) => {
+      if (!this.getKey(e.key)) {
+        this.keyEvent.keyDown[e.key] = e.key;
+        this.keyEvent.currentlyDownKey[e.key] = e.key;
+      }
+      if(e.key == Key.UP) {
+        this.keyboard.dispatchEvent(keyUpEvent);
+      }
+      if(e.key == Key.DOWN) {
+        this.keyboard.dispatchEvent(keyDownEvent);
+      }
+      if(e.key == Key.SPACE) {
+        this.keyboard.dispatchEvent(keySpaceEvent);
+      }
+    });
+
+    window.addEventListener("keyup", (event) => {
+      this.keyEvent.keyUp[event.key] = event.key;
+      delete this.keyEvent.currentlyDownKey[event.key];
+    });
+
+    this.canvas.addEventListener(
+      "mousedown",
+      (event) => {
+        event.preventDefault();
+        let x = event.offsetX;
+        let y = event.offsetY;
+        this.keyEvent.mouseClicked = { x: x, y: y };
+      },
+      true
+    );
+
+    this.canvas.addEventListener(
+      "mouseup",
+      (event) => {
+        event.preventDefault();
+        this.resetMouseEvent();
+      },
+      true
+    );
   }
-
-  canvas = document.getElementById("myCanvas");
-  click = this.canvas?.addEventListener(
-    "mousedown",
-    (event) => {
-      event.preventDefault();
-      let x = event.offsetX;
-      let y = event.offsetY;
-      this.keyEvent.mouseClicked = { x: x, y: y };
-    },
-    true
-  );
-
-  releaseClick = this.canvas?.addEventListener(
-    "mouseup",
-    (event) => {
-      event.preventDefault();
-      this.resetMouseEvent();
-    },
-    true
-  );
 
   resetMouseEvent() {
     this.keyEvent.mouseClicked = {};
@@ -56,16 +94,18 @@ export default class InputManager {
   }
 
   handle() {
-    window.addEventListener("keydown", (event) => {
-      if (!this.getKey(event.key)) {
-        this.keyEvent.keyDown[event.key] = event.key;
-        this.keyEvent.currentlyDownKey[event.key] = event.key;
-      }
-    });
-
-    window.addEventListener("keyup", (event) => {
-      this.keyEvent.keyUp[event.key] = event.key;
-      delete this.keyEvent.currentlyDownKey[event.key];
-    });
+    if (this.getKey(Key.DOWN)) {
+      this.listeners.forEach((ev) => {
+        console.log(ev);
+      });
+    }
   }
+}
+
+function keyDownFn(event) {
+  return event;
+}
+
+function handleKeyDown(event) {
+  console.log(event,"hey")
 }

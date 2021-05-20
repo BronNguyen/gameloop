@@ -13,7 +13,7 @@ import SceneManager from "SuperiorPhaser/SceneManager";
 import { GameStatus } from "../const/GameStatus";
 import { Key } from "../const/KeyInput";
 
-export default class GameplayScene extends Scene {
+export default class GameScene extends Scene {
   dino: Dino;
   enemies: Enemy[] = [];
   camera: Camera;
@@ -113,6 +113,13 @@ export default class GameplayScene extends Scene {
     this.gameButtonObjects.push(this.upButton, this.downButton);
     this.camera.follow(this.dino);
     // this.game.renderer.canvas.click()
+    // this.game.inputManager.addListener("keyup", this.handleFly)
+  }
+
+  handleKeyup(key) {
+    if (key === Key.SPACE) {
+      // this.jump()
+    }
   }
 
   update(time: number, delta: number) {
@@ -128,6 +135,10 @@ export default class GameplayScene extends Scene {
   }
 
   handleGameRunning(time, delta) {
+
+
+    // this.game.inputManager.eventTarget.dispatchEvent(this.game.inputManager.event)
+
     this.distance -= this.dino.velocity.x;
     if (Math.abs(this.distance) >= this.game.gameConfig.canvasWidth) {
       this.distance = 0;
@@ -174,7 +185,7 @@ export default class GameplayScene extends Scene {
 
     if (
       this.allowHighScore &&
-      !this.renderChecking(this.hiScoreText, this.textObjects)
+      !this.inArray(this.hiScoreText, this.textObjects)
     )
       this.textObjects.push(this.hiScoreText);
   }
@@ -252,16 +263,16 @@ export default class GameplayScene extends Scene {
 
   handleGameOver(time, delta) {
     this.gameButtonObjects.map((btn) => btn.update(time, delta));
-    if (!this.renderChecking(this.hiScoreText, this.textObjects))
+    if (!this.inArray(this.hiScoreText, this.textObjects))
       this.textObjects.push(this.hiScoreText);
 
-    if (!this.renderChecking(this.gameOverText, this.backgroundObjects))
+    if (!this.inArray(this.gameOverText, this.backgroundObjects))
       this.backgroundObjects.push(this.gameOverText);
 
     this.gameButtonObjects.pop();
     this.gameButtonObjects.pop();
 
-    if (!this.renderChecking(this.gameOverButton, this.gameButtonObjects))
+    if (!this.inArray(this.gameOverButton, this.gameButtonObjects))
       this.gameButtonObjects.push(this.gameOverButton);
 
     if (
@@ -273,10 +284,10 @@ export default class GameplayScene extends Scene {
       this.gameButtonObjects.pop();
       this.textObjects.pop();
 
-      if (!this.renderChecking(this.upButton, this.gameButtonObjects))
+      if (!this.inArray(this.upButton, this.gameButtonObjects))
         this.gameButtonObjects.push(this.upButton);
 
-      if (!this.renderChecking(this.downButton, this.gameButtonObjects))
+      if (!this.inArray(this.downButton, this.gameButtonObjects))
         this.gameButtonObjects.push(this.downButton);
 
       //set the game to inital state
@@ -292,7 +303,7 @@ export default class GameplayScene extends Scene {
     }
   }
 
-  renderChecking(renderObject, renderObjectArray) {
+  inArray(renderObject, renderObjectArray) {
     //check if the object is already rendered or not
     if (renderObjectArray.filter((obj) => obj == renderObject).length > 0)
       return true;

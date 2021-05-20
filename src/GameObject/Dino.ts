@@ -45,18 +45,21 @@ export default class Dino extends GameObject {
 
   handleInput() {
     const input = this.currentScene.game.inputManager;
-    if (input.getKey(Key.UP)) {
-      this.jump();
-      return;
-    }
-    if (input.getKey(Key.SPACE)) {
-      this.jump();
-      return;
-    }
-    if (input.getKey(Key.DOWN)) {
-      this.duck();
-      return;
-    }
+    input.keyboard.addEventListener(Key.UP,()=>this.jump());
+    input.keyboard.addEventListener(Key.SPACE,()=>this.jump());
+    input.keyboard.addEventListener(Key.DOWN,()=>this.duck());
+    // if (input.getKey(Key.UP)) {
+    //   this.jump();
+    //   return;
+    // }
+    // if (input.getKey(Key.SPACE)) {
+    //   this.jump();
+    //   return;
+    // }
+    // if (input.getKey(Key.DOWN)) {
+    //   this.duck();
+    //   return;
+    // }
     //  this condition code created in order to make the dino duck permanently when hold pressing DOWN button
     // run back when released DOWN button
     input.keyEvent.mouseClicked == {} ? console.log("key") : true;
